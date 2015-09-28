@@ -42,4 +42,17 @@ class HrBbcodeNodeTest extends PhpUnit_Framework_TestCase
 		$this->assertTrue($this->_node->equals($node));
 	}
 	
+	public function test_sandwichParsing()
+	{
+		$parser = new PhpBbcodeParser();
+		$node = $parser->parse("text before [hr] text after");
+		
+		$witness = new ArticleBbcodeNode();
+		$witness->addChild(new TextBbcodeNode("text before "));
+		$witness->addChild($this->_node);
+		$witness->addChild(new TextBbcodeNode(" text after"));
+		
+		$this->assertTrue($witness->equals($node));
+	}
+	
 }

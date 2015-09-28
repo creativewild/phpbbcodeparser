@@ -64,7 +64,7 @@ class TextBbcodeNode implements IBbcodeNode
 	public function equals(IBbcodeNode $node)
 	{
 		return $node instanceof TextBbcodeNode 
-			&& strcmp($this->_raw_text, $node->_raw_text);
+			&& !strcmp($this->_raw_text, $node->_raw_text);
 	}
 	
 }

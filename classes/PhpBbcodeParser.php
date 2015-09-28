@@ -94,6 +94,7 @@ class PhpBbcodeParser implements IBbcodeParser
 				{
 					$word .= $innerchar;
 				}
+				$this->_pos--;	// rewind last character, we pushed it too far
 				$newnode = $this->parseDispatch($word);
 				if($newnode !== null)
 				{
@@ -108,7 +109,7 @@ class PhpBbcodeParser implements IBbcodeParser
 				// the whole text has no brackets and is raw text
 				// put it into a new text node
 				$node->addChild(new TextBbcodeNode(substr(
-					$this->_string, $this->_pos
+					$this->_string, $this->_pos - 1
 				)));
 				return;
 			}
@@ -117,7 +118,7 @@ class PhpBbcodeParser implements IBbcodeParser
 				// the text is raw until next bracket
 				// adds a text node and puts the position pointer forward
 				$node->addChild(new TextBbcodeNode(substr(
-					$this->_string, $this->_pos, $next - $this->_pos
+					$this->_string, $this->_pos - 1, $next - $this->_pos + 1
 				)));
 				$this->_pos = $next;
 			}
@@ -132,7 +133,6 @@ class PhpBbcodeParser implements IBbcodeParser
 		$methodname = 'parse'.$nodeclass;
 		return $this->$methodname(new $nodeclass());
 	}
-	
 	
 	protected function parseBrBbcodeNode(BrBbcodeNode $node)
 	{
@@ -164,123 +164,6 @@ class PhpBbcodeParser implements IBbcodeParser
 	{
 		echo __METHOD__."\n";
 		// TODO
-	}
-	
-	/**
-	 * By using this function, we consider that every thing that is from 
-	 * current position on the string should be inner of this node. This
-	 * function will be called recursively until all the text is parsed.
-	 * Non closed tags will be closed at the end of the text until they 
-	 * are self-closeable tags.
-	 */
-	protected function parseNodeInner(AbstractBbcodeNode $node)
-	{
-		while($this->_pos < $this->_len)
-		{
-			if($this->_string[$this->_pos] === '[')
-			{
-				// first char is a bracket, is it an opening tag ?
-				$next = strpos($this->_string, ']', $this->_pos);
-				if($next === false ||  $next === $this->_pos)
-				{
-					// the opened brackets is a single bracket not in a tag, let
-					// it be, and put the char back in the text
-				}
-				elseif($next - $this->_pos < 10) // 10: longest tag length
-				{
-					// the opened brackets is a bracket in a non-tag, let it be
-					// and put the char back in the text
-				}
-				else 
-				{
-					// tag found.
-					$tagval = substr(
-						$this->_string, $this->_pos +1, $next - $this->_pos -1
-					);
-					if($tagval[0] === '/')
-					{
-						$closing = true;
-						$tagval = substr($tagval, 1);
-					}
-					else
-					{
-						$closing = false;
-					}
-					if(preg_match('#^(\w\d)+$#', $tagval))
-					{
-						// tag is correct
-						if($closing)
-						{
-							$classname = $this->lookupClassname($tagval);
-							if($classname === null)
-							{
-								// unknown tag name, treat it as plain text
-							}
-							else
-							{
-								// known tag name. if it is the same class as
-								// current node, closes it, else ignore it and
-								// threat it as plain text
-								if($classname === get_class($node))
-								{
-									// close the tag at the right place
-									$this->_pos = $next +1;
-									return;
-								}
-								else
-								{
-									$this->_pos = $next +1;
-								}
-							}
-						}
-						else
-						{
-							$classname = $this->lookupClassname($tagval);
-							if($classname === null)
-							{
-								// unknown tag name, treat it as plain text
-							}
-							else
-							{
-								// known tag name, generates a new tag and
-								// continue parsing at the right place
-								$tag = new $classname();
-								$this->_pos = $next + 1;
-								$this->parseNodeInner($tag);
-								$node->addChild($tag);
-							}
-						}
-					}
-					else
-					{
-						// tag is incorrect, treat it as plain text
-						$this->_pos = $next +1;
-					}
-					
-				}
-				continue;
-			}
-			// We have text. Use this text until the last bracket.
-			$next = strpos($this->_string, '[', $this->_pos);
-			if($next === false)
-			{
-				// the whole text has no brackets and is raw text
-				// put it into a new text node
-				$node->addChild(new TextBbcodeNode(substr(
-					$this->_string, $this->_pos
-				)));
-				return;
-			}
-			else 
-			{
-				// the text is raw until next bracket
-				// adds a text node and puts the position pointer forward
-				$node->addChild(new TextBbcodeNode(substr(
-					$this->_string, $this->_pos, $next - $this->_pos
-				)));
-				$this->_pos = $next;
-			}
-		}
 	}
 	
 	/**

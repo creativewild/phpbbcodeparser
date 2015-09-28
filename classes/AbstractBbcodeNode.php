@@ -86,14 +86,23 @@ abstract class AbstractBbcodeNode implements IBbcodeNode
 	public function equals(IBbcodeNode $node)
 	{
 		if(!($node instanceof self))
+		{
+			echo "equals failed: ".get_class($this).' vs '.get_class($node);
 			return false;
+		}
 		$other_children = $node->getChildren();
 		if(count($other_children) !== count($this->getChildren()))
+		{
+			echo "equals failed: ".count($this->getChildren()).' vs '.count($other_children).' children';
 			return false;
+		}
 		foreach($this->getChildren() as $i => $child)
 		{
 			if(!$child->equals($other_children[$i]))
+			{
+				echo "equals failed: (".$i.")".get_class($child).' vs '.get_class($other_children[$i]);
 				return false;
+			}
 		}
 		return true;
 	}
