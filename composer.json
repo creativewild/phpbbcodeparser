@@ -1,0 +1,16 @@
+{
+	"require":{
+	
+	},
+	"autoload": {
+		"classmap": [
+			"interfaces/",
+			"classes/"
+		]
+	},
+	"repositories": [
+		{
+			"packagist": false
+		}
+	]
+}
