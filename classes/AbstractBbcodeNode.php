@@ -71,7 +71,7 @@ abstract class AbstractBbcodeNode implements IBbcodeNode
 	 */
 	public function toHtml()
 	{
-		$str .= '';
+		$str = '';
 		foreach($this->_children as $child)
 		{
 			$str .= $child->toHtml();

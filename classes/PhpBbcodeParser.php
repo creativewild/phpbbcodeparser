@@ -183,8 +183,45 @@ class PhpBbcodeParser implements IBbcodeParser
 	
 	protected function parseUrlBbcodeNode(UrlBbcodeNode $node)
 	{
-		echo __METHOD__."\n";
-		// TODO
+		$equals_sign_pos = strpos($this->_string, '=', $this->_pos);
+		$first_rbracket_pos = strpos($this->_string, ']', $this->_pos);
+		if($first_rbracket_pos !== false)
+		{
+			$end = stripos($this->_string, '[/url]', $this->_pos);
+			if($equals_sign_pos !== false && $equals_sign_pos < $first_rbracket_pos)
+			{
+				// composite url with [url=///]zzz[/url] syntax
+				$url = substr($this->_string, $equals_sign_pos + 1, $first_rbracket_pos - $equals_sign_pos - 1);
+				$node->setUrl($url);
+				$node->addChild(new TextBbcodeNode(substr($this->_string, 
+					$first_rbracket_pos + 1, $end - $first_rbracket_pos - 1
+				)));
+				$this->_pos = $end + 6;
+				return $node;
+			}
+			else
+			{
+				// simple [url]///[/url] syntax
+				if($end !== null)
+				{
+					$url = substr($this->_string,
+						$first_rbracket_pos + 1,
+						$end - $first_rbracket_pos - 1
+					);
+					$node->setUrl($url);
+					$this->_pos = $end + 6;
+					return $node;
+				}
+				else
+				{
+					// no end tag found: treat as text
+				}
+			}
+		}
+		else
+		{
+			// no end bracket found: treat as text
+		}
 	}
 	
 	/**

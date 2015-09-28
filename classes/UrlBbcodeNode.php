@@ -50,12 +50,23 @@ class UrlBbcodeNode extends AbstractBbcodeNode
 			return "";
 		if(count(parent::getChildren()) === 0)
 		{
-			return '<a href="'.urlencode($this->_target_url).'">'.htmlentities($this->_target_url, ENT_QUOTES).'</a>';
+			return '<a href="'.htmlentities($this->_target_url).'">'.htmlentities($this->_target_url, ENT_QUOTES).'</a>';
 		}
 		else
 		{
-			return '<a href="'.urlencode($this->_target_url).'">'.parent::toHtml().'</a>';
+			return '<a href="'.htmlentities($this->_target_url).'">'.parent::toHtml().'</a>';
 		}
+	}
+	
+	/**
+	 * (non-PHPdoc)
+	 * @see AbstractBbcodeNode::equals()
+	 */
+	public function equals(IBbcodeNode $node)
+	{
+		return $node instanceof UrlBbcodeNode
+			&& !strcasecmp($this->_target_url, $node->_target_url)
+			&& parent::equals($node);
 	}
 	
 }
