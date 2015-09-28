@@ -29,6 +29,29 @@ abstract class AbstractBbcodeNode implements IBbcodeNode
 	}
 	
 	/**
+	 * 
+	 * @return IBbcodeNode[]
+	 */
+	public function getChildren()
+	{
+		return $this->_children;
+	}
+	
+	/**
+	 * (non-PHPdoc)
+	 * @see IBbcodeNode::isEmpty()
+	 */
+	public function isEmpty()
+	{
+		foreach($this->_children as $child)
+		{
+			if(!$child->isEmpty())
+				return false;
+		}
+		return true;
+	}
+	
+	/**
 	 * (non-PHPdoc)
 	 * @see IBbcodeNode::toString()
 	 */

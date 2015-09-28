@@ -25,6 +25,8 @@ class PhpBbcodeParser implements IBbcodeParser
 	private $_len = null;
 	private $_pos = null;
 	
+	private $_stack = null;
+	
 	/**
 	 * (non-PHPdoc)
 	 * @see IBbcodeParser::parse()
@@ -34,6 +36,7 @@ class PhpBbcodeParser implements IBbcodeParser
 		$this->_string = $string;
 		$this->_len = strlen($string);
 		$this->_pos = 0;
+		$this->_stack = new SplStack();
 		
 		$base = new ArticleBbcodeNode();
 		
@@ -51,6 +54,29 @@ class PhpBbcodeParser implements IBbcodeParser
 	protected function getChar()
 	{
 		return $this->_string[$this->_pos++];
+	}
+	
+	/**
+	 * 
+	 * @param char $char
+	 * @return boolean
+	 */
+	public function isLetter($char)
+	{
+		$ord = ord($char);
+		return ($ord >= 65 && $ord <= 90)
+			|| ($ord >= 97 && $ord <= 122);
+	}
+	
+	/**
+	 * 
+	 * @param char $char
+	 * @return boolean
+	 */
+	public function isNumeric($char)
+	{
+		$ord = ord($char);
+		return $ord >= 48 && $ord <= 57;
 	}
 	
 	/**
@@ -145,31 +171,27 @@ class PhpBbcodeParser implements IBbcodeParser
 					}
 					
 				}
-				// TODO
+				continue;
 			}
-			else
+			// We have text. Use this text until the last bracket.
+			$next = strpos($this->_string, '[', $this->_pos);
+			if($next === false)
 			{
-				// first char is not a bracket, so it is a text. Use this text
-				// until the last bracket.
-				$next = strpos($this->_string, '[', $this->_pos);
-				if($next === false)
-				{
-					// the whole text has no brackets and is raw text
-					// put it into a new text node
-					$node->addChild(new TextBbcodeNode(substr(
-						$this->_string, $this->_pos
-					)));
-					return;
-				}
-				else 
-				{
-					// the text is raw until next bracket
-					// adds a text node and puts the position pointer forward
-					$node->addChild(new TextBbcodeNode(substr(
-						$this->_string, $this->_pos, $next - $this->_pos
-					)));
-					$this->_pos = $next;
-				}
+				// the whole text has no brackets and is raw text
+				// put it into a new text node
+				$node->addChild(new TextBbcodeNode(substr(
+					$this->_string, $this->_pos
+				)));
+				return;
+			}
+			else 
+			{
+				// the text is raw until next bracket
+				// adds a text node and puts the position pointer forward
+				$node->addChild(new TextBbcodeNode(substr(
+					$this->_string, $this->_pos, $next - $this->_pos
+				)));
+				$this->_pos = $next;
 			}
 		}
 	}

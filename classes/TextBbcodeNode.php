@@ -32,6 +32,15 @@ class TextBbcodeNode implements IBbcodeNode
 	
 	/**
 	 * (non-PHPdoc)
+	 * @see IBbcodeNode::isEmpty()
+	 */
+	public function isEmpty()
+	{
+		return $this->_raw_text === null || $this->_raw_text === "";
+	}
+	
+	/**
+	 * (non-PHPdoc)
 	 * @see IBbcodeNode::toString()
 	 */
 	public function toString()

@@ -12,14 +12,21 @@ interface IBbcodeNode
 {
 	
 	/**
-	 * Gets correctly formed bbcode from this tree.
+	 * True if this subtree represents an empty string, false else.
+	 * 
+	 * @return boolean
+	 */
+	public function isEmpty();
+	
+	/**
+	 * Gets correctly formed bbcode from this subtree.
 	 * 
 	 * @return string
 	 */
 	public function toString();
 	
 	/**
-	 * Gets HTML5 compliant string from this tree.
+	 * Gets HTML5 compliant string from this subtree.
 	 * 
 	 * @return string
 	 */
