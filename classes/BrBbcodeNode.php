@@ -30,4 +30,13 @@ class BrBbcodeNode implements IBbcodeNode
 		return "<br>";
 	}
 	
+	/**
+	 * (non-PHPdoc)
+	 * @see IBbcodeNode::equals()
+	 */
+	public function equals(IBbcodeNode $node)
+	{
+		return $node instanceof BrBbcodeNode;
+	}
+	
 }

@@ -30,4 +30,13 @@ class HrBbcodeNode implements IBbcodeNode
 		return "<hr>";
 	}
 	
+	/**
+	 * (non-PHPdoc)
+	 * @see IBbcodeNode::equals()
+	 */
+	public function equals(IBbcodeNode $node)
+	{
+		return $node instanceof HrBbcodeNode;
+	}
+	
 }

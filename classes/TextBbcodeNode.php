@@ -57,4 +57,14 @@ class TextBbcodeNode implements IBbcodeNode
 		return htmlentities($this->_raw_text, ENT_QUOTES, 'UTF-8');
 	}
 	
+	/**
+	 * (non-PHPdoc)
+	 * @see IBbcodeNode::equals()
+	 */
+	public function equals(IBbcodeNode $node)
+	{
+		return $node instanceof TextBbcodeNode 
+			&& strcmp($this->_raw_text, $node->_raw_text);
+	}
+	
 }

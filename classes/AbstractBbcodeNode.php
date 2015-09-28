@@ -79,4 +79,23 @@ abstract class AbstractBbcodeNode implements IBbcodeNode
 		return $str;
 	}
 	
+	/**
+	 * (non-PHPdoc)
+	 * @see IBbcodeNode::equals()
+	 */
+	public function equals(IBbcodeNode $node)
+	{
+		if(!($node instanceof self))
+			return false;
+		$other_children = $node->getChildren();
+		if(count($other_children) !== count($this->getChildren()))
+			return false;
+		foreach($this->getChildren() as $i => $child)
+		{
+			if(!$child->equals($other_children[$i]))
+				return false;
+		}
+		return true;
+	}
+	
 }

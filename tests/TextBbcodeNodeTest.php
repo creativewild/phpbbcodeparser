@@ -21,6 +21,11 @@ class TextBbcodeNodeTest extends PhpUnit_Framework_TestCase
 	}
 	
 	
+	public function test_isEmpty()
+	{
+		$this->assertFalse($this->_node->isEmpty());
+	}
+	
 	public function test_toString()
 	{
 		$this->assertEquals("a new text [!] < >", $this->_node->toString());

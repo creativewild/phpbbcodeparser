@@ -42,8 +42,11 @@ class PhpBbcodeParser implements IBbcodeParser
 		
 		if($this->_len > 1)
 		{
-			$this->parseNodeInner($base);
+			$this->parseContent($base);
 		}
+		
+		if(count($children = $base->getChildren()) === 1)
+			return $children[0];
 		
 		return $base;
 	}
@@ -77,6 +80,90 @@ class PhpBbcodeParser implements IBbcodeParser
 	{
 		$ord = ord($char);
 		return $ord >= 48 && $ord <= 57;
+	}
+	
+	protected function parseContent(AbstractBbcodeNode $node)
+	{
+		while($this->_pos < $this->_len)
+		{
+			$char = $this->getChar();
+			if($char === '[')
+			{
+				$word = "";
+				while($this->isLetter($innerchar = $this->getChar()))
+				{
+					$word .= $innerchar;
+				}
+				$newnode = $this->parseDispatch($word);
+				if($newnode !== null)
+				{
+					$node->addChild($newnode);
+					continue;
+				}
+			}
+			// treat this piece of text as raw text, until next "["
+			$next = strpos($this->_string, '[', $this->_pos);
+			if($next === false)
+			{
+				// the whole text has no brackets and is raw text
+				// put it into a new text node
+				$node->addChild(new TextBbcodeNode(substr(
+					$this->_string, $this->_pos
+				)));
+				return;
+			}
+			else
+			{
+				// the text is raw until next bracket
+				// adds a text node and puts the position pointer forward
+				$node->addChild(new TextBbcodeNode(substr(
+					$this->_string, $this->_pos, $next - $this->_pos
+				)));
+				$this->_pos = $next;
+			}
+		}
+	}
+	
+	protected function parseDispatch($nodename)
+	{
+		$nodeclass = $this->lookupClassname($nodename);
+		if($nodeclass === null)
+			return null;
+		$methodname = 'parse'.$nodeclass;
+		return $this->$methodname(new $nodeclass());
+	}
+	
+	
+	protected function parseBrBbcodeNode(BrBbcodeNode $node)
+	{
+		$pos = strpos($this->_string, ']', $this->_pos);
+		if($pos === false)
+			$this->_pos = $this->_len;
+		else 
+			$this->_pos = $pos + 1;
+		return $node;
+	}
+	
+	protected function parseHrBbcodeNode(HrBbcodeNode $node)
+	{
+		$pos = strpos($this->_string, ']', $this->_pos);
+		if($pos === false)
+			$this->_pos = $this->_len;
+		else 
+			$this->_pos = $pos + 1;
+		return $node;
+	}
+	
+	protected function parseImgBbcodeNode(ImgBbcodeNode $node)
+	{
+		echo __METHOD__."\n";
+		// TODO
+	}
+	
+	protected function parseUrlBbcodeNode(UrlBbcodeNode $node)
+	{
+		echo __METHOD__."\n";
+		// TODO
 	}
 	
 	/**

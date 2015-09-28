@@ -32,4 +32,12 @@ interface IBbcodeNode
 	 */
 	public function toHtml();
 	
+	/**
+	 * Returns true if the other node holds the same information as this node.
+	 * 
+	 * @param IBbcodeNode $node
+	 * @return boolean
+	 */
+	public function equals(IBbcodeNode $node);
+	
 }
