@@ -195,7 +195,7 @@ class PhpBbcodeParser implements IBbcodeParser
 				$node->setUrl($url);
 				$node->addChild(new TextBbcodeNode(substr($this->_string, 
 					$first_rbracket_pos + 1, $end - $first_rbracket_pos - 1
-				)));
+				)));	// TODO url locks the possibility to have inner children
 				$this->_pos = $end + 6;
 				return $node;
 			}
