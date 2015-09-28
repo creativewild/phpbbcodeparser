@@ -156,8 +156,29 @@ class PhpBbcodeParser implements IBbcodeParser
 	
 	protected function parseImgBbcodeNode(ImgBbcodeNode $node)
 	{
-		echo __METHOD__."\n";
-		// TODO
+		$first_rbracket_pos = strpos($this->_string, ']', $this->_pos);
+		if($first_rbracket_pos !== null)
+		{
+			$end = stripos($this->_string, '[/img]', $this->_pos);
+			if($end !== null)
+			{
+				$url = substr($this->_string, 
+					$first_rbracket_pos + 1, 
+					$end - $first_rbracket_pos - 1
+				);
+				$node->setUrl($url);
+				$this->_pos = $end + 6;
+				return $node;
+			}
+			else
+			{
+				// no end tag found: treat as text
+			}
+		}
+		else
+		{
+			// no end bracket found: treat as text
+		}
 	}
 	
 	protected function parseUrlBbcodeNode(UrlBbcodeNode $node)

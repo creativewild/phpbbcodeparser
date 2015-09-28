@@ -10,6 +10,16 @@ class ImgBbcodeNode implements IBbcodeNode
 	private $_target_src = null;
 	
 	/**
+	 * Sets target image url with given url.
+	 * 
+	 * @param string $url
+	 */
+	public function setUrl($url)
+	{
+		$this->_target_src = $url;
+	}
+	
+	/**
 	 * (non-PHPdoc)
 	 * @see IBbcodeNode::isEmpty()
 	 */
@@ -37,7 +47,18 @@ class ImgBbcodeNode implements IBbcodeNode
 	{
 		if($this->isEmpty())
 			return "";
-		return '<img src="'.urlencode($this->_target_src).'">';
+		return '<img src="'.htmlentities($this->_target_src)
+			.'" alt="'.htmlentities(basename($this->_target_src)).'">';
+	}
+	
+	/**
+	 * (non-PHPdoc)
+	 * @see IBbcodeNode::equals()
+	 */
+	public function equals(IBbcodeNode $node)
+	{
+		return $node instanceof ImgBbcodeNode
+			&& !strcmp($this->_target_src, $node->_target_src);
 	}
 	
 }

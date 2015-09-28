@@ -39,7 +39,7 @@ class BrBbcodeNodeTest extends PhpUnit_Framework_TestCase
 	{
 		$parser = new PhpBbcodeParser();
 		$node = $parser->parse("[br]");
-		$this->assertTrue($this->_node->equals($node));
+		$this->assertEquals($this->_node, $node);
 	}
 	
 	public function test_sandwichParsing()
@@ -52,7 +52,7 @@ class BrBbcodeNodeTest extends PhpUnit_Framework_TestCase
 		$witness->addChild($this->_node);
 		$witness->addChild(new TextBbcodeNode(" text after"));
 		
-		$this->assertTrue($witness->equals($node));
+		$this->assertEquals($witness, $node);
 	}
 	
 }
