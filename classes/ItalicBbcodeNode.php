@@ -1,14 +1,14 @@
 <?php
 
 /**
- * BoldBbcodeNode class file.
+ * ItalicBbcodeNode class file.
  * 
- * This class represents a text node that is bolded. (larger types fonts than
- * normal fonts).
+ * This class represents a text node that is italicized. (thiner types fonts 
+ * with ~15-30° angle forward from top of the letter).
  * 
  * @author Anastaszor
  */
-class BoldBbcodeNode extends AbstractBbcodeNode
+class ItalicBbcodeNode extends AbstractBbcodeNode
 {
 	
 	/**
@@ -19,7 +19,7 @@ class BoldBbcodeNode extends AbstractBbcodeNode
 	{
 		if($this->isEmpty())
 			return '';
-		return '[b]'.parent::toString().'[/b]';
+		return '[i]'.parent::toString().'[/i]';
 	}
 	
 	/**
@@ -30,7 +30,7 @@ class BoldBbcodeNode extends AbstractBbcodeNode
 	{
 		if($this->isEmpty())
 			return '';
-		return '<strong>'.parent::toHtml().'</strong>';
+		return '<em>'.parent::toHtml().'</em>';
 	}
 	
 	/**
@@ -39,7 +39,7 @@ class BoldBbcodeNode extends AbstractBbcodeNode
 	 */
 	public function equals(IBbcodeNode $node)
 	{
-		return $node instanceof BoldBbcodeNode && parent::equals($node);
+		return $node instanceof ItalicBbcodeNode && parent::equals($node);
 	}
 	
 }
