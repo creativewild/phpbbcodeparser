@@ -38,6 +38,32 @@ abstract class AbstractBbcodeNode implements IBbcodeNode
 	}
 	
 	/**
+	 * 
+	 * @param string $string
+	 */
+	public function appendText($string)
+	{
+		if(($qty = count($this->getChildren())) > 0)
+		{
+			$elem = $this->_children[$qty - 1];
+			if($elem instanceof TextBbcodeNode)
+			{
+				$elem->appendText($string);
+			}
+			else
+			{
+				$elem = new TextBbcodeNode($string);
+				$this->_children[] = $elem;
+			}
+		}
+		else
+		{
+			$elem = new TextBbcodeNode($string);
+			$this->_children[] = $elem;
+		}
+	}
+	
+	/**
 	 * (non-PHPdoc)
 	 * @see IBbcodeNode::isEmpty()
 	 */

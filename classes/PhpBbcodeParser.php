@@ -21,11 +21,16 @@ class PhpBbcodeParser implements IBbcodeParser
 		'url' => array('class' => 'UrlBbcodeNode', 'autoclosable' => false),
 	);
 	
-	private $_string = null;
-	private $_len = null;
-	private $_pos = null;
+	protected $_string = null;
+	protected $_len = null;
+	protected $_pos = null;
+	protected $_char = null;
 	
-	private $_stack = null;
+	/**
+	 * 
+	 * @var SplStack [AbstractBbcodeNode]
+	 */
+	protected $_stack = null;
 	
 	/**
 	 * (non-PHPdoc)
@@ -36,14 +41,13 @@ class PhpBbcodeParser implements IBbcodeParser
 		$this->_string = $string;
 		$this->_len = strlen($string);
 		$this->_pos = 0;
+		
 		$this->_stack = new SplStack();
 		
 		$base = new ArticleBbcodeNode();
+		$this->_stack->push($base);
 		
-		if($this->_len > 1)
-		{
-			$this->parseContent($base);
-		}
+		$this->parseContent();
 		
 		if(count($children = $base->getChildren()) === 1)
 			return $children[0];
@@ -56,7 +60,7 @@ class PhpBbcodeParser implements IBbcodeParser
 	 */
 	protected function getChar()
 	{
-		return $this->_string[$this->_pos++];
+		$this->_char = $this->_string[$this->_pos++];
 	}
 	
 	/**
@@ -64,11 +68,10 @@ class PhpBbcodeParser implements IBbcodeParser
 	 * @param char $char
 	 * @return boolean
 	 */
-	public function isLetter($char)
+	protected function isLetter()
 	{
-		$ord = ord($char);
-		return ($ord >= 65 && $ord <= 90)
-			|| ($ord >= 97 && $ord <= 122);
+		$ord = ord($this->_char);
+		return ($ord >= 65 && $ord <= 90) || ($ord >= 97 && $ord <= 122);
 	}
 	
 	/**
@@ -76,87 +79,95 @@ class PhpBbcodeParser implements IBbcodeParser
 	 * @param char $char
 	 * @return boolean
 	 */
-	public function isNumeric($char)
+	protected function isNumeric()
 	{
-		$ord = ord($char);
+		$ord = ord($this->_char);
 		return $ord >= 48 && $ord <= 57;
 	}
 	
-	protected function parseContent(AbstractBbcodeNode $node)
+	protected function parseContent()
 	{
 		while($this->_pos < $this->_len)
 		{
-			$char = $this->getChar();
-			if($char === '[')
+			$this->getChar();
+				
+			if($this->_char === '[')
 			{
-				$word = "";
-				while($this->isLetter($innerchar = $this->getChar()))
+				$this->getChar();
+				if($this->_char === '/')
 				{
-					$word .= $innerchar;
+					$this->parseEndGroup();
+					return;
 				}
-				$this->_pos--;	// rewind last character, we pushed it too far
-				$newnode = $this->parseDispatch($word);
-				if($newnode !== null)
+				else
 				{
-					$node->addChild($newnode);
-					continue;
+					$this->_pos--;
+					$this->_char = $this->_string[$this->_pos - 1];
+					$this->parseBeginGroup();
 				}
-			}
-			// treat this piece of text as raw text, until next "["
-			$next = strpos($this->_string, '[', $this->_pos);
-			if($next === false)
-			{
-				// the whole text has no brackets and is raw text
-				// put it into a new text node
-				$node->addChild(new TextBbcodeNode(substr(
-					$this->_string, $this->_pos - 1
-				)));
-				return;
 			}
 			else
 			{
-				// the text is raw until next bracket
-				// adds a text node and puts the position pointer forward
-				$node->addChild(new TextBbcodeNode(substr(
-					$this->_string, $this->_pos - 1, $next - $this->_pos + 1
-				)));
-				$this->_pos = $next;
+				$element = $this->_stack->top();
+				$element->appendText($this->_char);
 			}
 		}
 	}
 	
-	protected function parseDispatch($nodename)
+	protected function parseBeginGroup()
 	{
-		$nodeclass = $this->lookupClassname($nodename);
-		if($nodeclass === null)
-			return null;
-		$methodname = 'parse'.$nodeclass;
-		return $this->$methodname(new $nodeclass());
+		$word = "";
+		$this->getChar();
+		while($this->isLetter())
+		{
+			$word .= $this->_char;
+			$this->getChar();
+		}
+		$nodeclass = $this->lookupClassname($word);
+		if($nodeclass !== null)
+		{
+			$methodname = 'parse'.$nodeclass;
+			$node = new $nodeclass();
+			$element = $this->_stack->top();
+			$element->addChild($node);
+			$this->_stack->push($node);
+			$this->$methodname($node);
+		}
+		else
+		{
+			$element = $this->_stack->top();
+			$element->appendText('['.$word);
+		}
+	}
+	
+	protected function parseEndGroup()
+	{
+		$pos = strpos($this->_string, ']', $this->_pos - 1);
+		if($pos !== false)
+			$this->_pos = $pos + 1;
+		if($this->_stack->count() > 1)
+			$this->_stack->pop();
 	}
 	
 	protected function parseBrBbcodeNode(BrBbcodeNode $node)
 	{
-		$pos = strpos($this->_string, ']', $this->_pos);
-		if($pos === false)
-			$this->_pos = $this->_len;
-		else 
+		$pos = strpos($this->_string, ']', $this->_pos - 1);
+		if($pos !== false)
 			$this->_pos = $pos + 1;
-		return $node;
+		return $this->_stack->pop();
 	}
 	
 	protected function parseHrBbcodeNode(HrBbcodeNode $node)
 	{
-		$pos = strpos($this->_string, ']', $this->_pos);
-		if($pos === false)
-			$this->_pos = $this->_len;
-		else 
+		$pos = strpos($this->_string, ']', $this->_pos - 1);
+		if($pos !== false)
 			$this->_pos = $pos + 1;
-		return $node;
+		return $this->_stack->pop();
 	}
 	
 	protected function parseImgBbcodeNode(ImgBbcodeNode $node)
 	{
-		$first_rbracket_pos = strpos($this->_string, ']', $this->_pos);
+		$first_rbracket_pos = strpos($this->_string, ']', $this->_pos - 1);
 		if($first_rbracket_pos !== null)
 		{
 			$end = stripos($this->_string, '[/img]', $this->_pos);
@@ -168,7 +179,7 @@ class PhpBbcodeParser implements IBbcodeParser
 				);
 				$node->setUrl($url);
 				$this->_pos = $end + 6;
-				return $node;
+				return $this->_stack->pop();
 			}
 			else
 			{
@@ -183,24 +194,22 @@ class PhpBbcodeParser implements IBbcodeParser
 	
 	protected function parseUrlBbcodeNode(UrlBbcodeNode $node)
 	{
-		$equals_sign_pos = strpos($this->_string, '=', $this->_pos);
-		$first_rbracket_pos = strpos($this->_string, ']', $this->_pos);
+		$equals_sign_pos = strpos($this->_string, '=', $this->_pos - 1);
+		$first_rbracket_pos = strpos($this->_string, ']', $this->_pos - 1);
 		if($first_rbracket_pos !== false)
 		{
-			$end = stripos($this->_string, '[/url]', $this->_pos);
 			if($equals_sign_pos !== false && $equals_sign_pos < $first_rbracket_pos)
 			{
 				// composite url with [url=///]zzz[/url] syntax
 				$url = substr($this->_string, $equals_sign_pos + 1, $first_rbracket_pos - $equals_sign_pos - 1);
 				$node->setUrl($url);
-				$node->addChild(new TextBbcodeNode(substr($this->_string, 
-					$first_rbracket_pos + 1, $end - $first_rbracket_pos - 1
-				)));	// TODO url locks the possibility to have inner children
-				$this->_pos = $end + 6;
+				$this->_pos = $first_rbracket_pos +1;
+				$this->parseContent();
 				return $node;
 			}
 			else
 			{
+				$end = stripos($this->_string, '[/url]', $this->_pos);
 				// simple [url]///[/url] syntax
 				if($end !== null)
 				{
@@ -210,7 +219,7 @@ class PhpBbcodeParser implements IBbcodeParser
 					);
 					$node->setUrl($url);
 					$this->_pos = $end + 6;
-					return $node;
+					return $this->_stack->pop();
 				}
 				else
 				{
@@ -228,7 +237,7 @@ class PhpBbcodeParser implements IBbcodeParser
 	 * 
 	 * @param string $tagname
 	 */
-	public function lookupClassname($tagname)
+	protected function lookupClassname($tagname)
 	{
 		$tagname = strtolower($tagname);
 		if(isset(self::$_tagClasses[$tagname]))

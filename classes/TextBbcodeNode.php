@@ -16,7 +16,7 @@ class TextBbcodeNode implements IBbcodeNode
 	 * The raw text content in this node.
 	 * @var string
 	 */
-	private $_raw_text = null;
+	private $_raw_text = "";
 	
 	/**
 	 * TextBbcodeNode constructor.
@@ -28,6 +28,16 @@ class TextBbcodeNode implements IBbcodeNode
 	public function __construct($string)
 	{
 		$this->_raw_text = $string;
+	}
+	
+	/**
+	 * Appends some text at the end of the text of this text node.
+	 * 
+	 * @param string $string
+	 */
+	public function appendText($string)
+	{
+		$this->_raw_text .= $string;
 	}
 	
 	/**
