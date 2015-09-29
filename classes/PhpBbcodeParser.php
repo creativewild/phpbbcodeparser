@@ -15,6 +15,7 @@ class PhpBbcodeParser implements IBbcodeParser
 	 * @var string
 	 */
 	private static $_tagClasses = array(
+		'b' => array('class' => 'BoldBbcodeNode', 'autoclosable' => false),
 		'br' => array('class' => 'BrBbcodeNode', 'autoclosable' => true),
 		'hr' => array('class' => 'HrBbcodeNode', 'autoclosable' => true),
 		'img' => array('class' => 'ImgBbcodeNode', 'autoclosable' => false),
@@ -149,6 +150,21 @@ class PhpBbcodeParser implements IBbcodeParser
 			$this->_stack->pop();
 	}
 	
+	protected function parseBoldBbcodeNode(BoldBbcodeNode $node)
+	{
+		$first_rbracket_pos = strpos($this->_string, ']', $this->_pos - 1);
+		if($first_rbracket_pos !== false)
+		{
+			$this->_pos = $first_rbracket_pos + 1;
+			$this->parseContent();
+		}
+		else
+		{
+			// no end bracket found: treat as text
+		}
+		return $node;
+	}
+	
 	protected function parseBrBbcodeNode(BrBbcodeNode $node)
 	{
 		$pos = strpos($this->_string, ']', $this->_pos - 1);
@@ -179,7 +195,6 @@ class PhpBbcodeParser implements IBbcodeParser
 				);
 				$node->setUrl($url);
 				$this->_pos = $end + 6;
-				return $this->_stack->pop();
 			}
 			else
 			{
@@ -190,6 +205,7 @@ class PhpBbcodeParser implements IBbcodeParser
 		{
 			// no end bracket found: treat as text
 		}
+		return $this->_stack->pop();
 	}
 	
 	protected function parseUrlBbcodeNode(UrlBbcodeNode $node)
@@ -219,7 +235,6 @@ class PhpBbcodeParser implements IBbcodeParser
 					);
 					$node->setUrl($url);
 					$this->_pos = $end + 6;
-					return $this->_stack->pop();
 				}
 				else
 				{
@@ -231,6 +246,7 @@ class PhpBbcodeParser implements IBbcodeParser
 		{
 			// no end bracket found: treat as text
 		}
+		return $this->_stack->pop();
 	}
 	
 	/**
