@@ -21,6 +21,7 @@ class PhpBbcodeParser implements IBbcodeParser
 		'i' => array('class' => 'ItalicBbcodeNode', 'autoclosable' => false),
 		'img' => array('class' => 'ImgBbcodeNode', 'autoclosable' => false),
 		's' => array('class' => 'StrikeBbcodeNode', 'autoclosable' => false),
+		'size' => array('class' => 'SizeBbcodeNode', 'autoclosable' => false),
 		'u' => array('class' => 'UnderlineBbcodeNode', 'autoclosable' => false),
 		'url' => array('class' => 'UrlBbcodeNode', 'autoclosable' => false),
 	);
@@ -223,6 +224,25 @@ class PhpBbcodeParser implements IBbcodeParser
 		{
 			// no end bracket found: treat as text
 		}
+		return $node;
+	}
+	
+	protected function parseSizeBbcodeNode(SizeBbcodeNode $node)
+	{
+		$first_rbracket_pos = strpos($this->_string, ']', $this->_pos - 1);
+		$equal_pos = strpos($this->_string, '=', $this->_pos - 1);
+		if($equal_pos !== false && $first_rbracket_pos !== false
+			&& $equal_pos < $first_rbracket_pos
+		) {
+			$sizeval = substr($this->_string, $equal_pos + 1, $first_rbracket_pos - $equal_pos - 1);
+			if(preg_match('#^\d+(px|%|em|cm|mm|in|pt|pc)?$#', $sizeval))
+			{
+				$node->setSize($sizeval);
+			}
+			$this->_pos = $first_rbracket_pos + 1;
+			$this->parseContent();
+		}
+		// else treat as text
 		return $node;
 	}
 	

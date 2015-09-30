@@ -59,5 +59,4 @@ class StrikeBbcodeNodeTest extends PhpUnit_Framework_TestCase
 		$this->assertEquals($witness, $node);
 	}
 	
-	
 }
