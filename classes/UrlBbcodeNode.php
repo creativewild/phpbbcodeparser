@@ -50,11 +50,11 @@ class UrlBbcodeNode extends AbstractBbcodeNode
 			return "";
 		if(count(parent::getChildren()) === 0)
 		{
-			return '<a href="'.htmlentities($this->_target_url).'">'.htmlentities($this->_target_url, ENT_QUOTES).'</a>';
+			return '<a href="'.$this->e($this->_target_url).'">'.$this->e($this->_target_url).'</a>';
 		}
 		else
 		{
-			return '<a href="'.htmlentities($this->_target_url).'">'.parent::toHtml().'</a>';
+			return '<a href="'.$this->e($this->_target_url).'">'.parent::toHtml().'</a>';
 		}
 	}
 	

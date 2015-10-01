@@ -64,6 +64,17 @@ abstract class AbstractBbcodeNode implements IBbcodeNode
 	}
 	
 	/**
+	 * Html encodes a string.
+	 * 
+	 * @param string $string
+	 * @return string
+	 */
+	public function e($string)
+	{
+		return htmlentities($string, ENT_QUOTES, 'UTF-8');
+	}
+	
+	/**
 	 * (non-PHPdoc)
 	 * @see IBbcodeNode::isEmpty()
 	 */

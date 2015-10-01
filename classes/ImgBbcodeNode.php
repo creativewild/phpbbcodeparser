@@ -47,8 +47,8 @@ class ImgBbcodeNode implements IBbcodeNode
 	{
 		if($this->isEmpty())
 			return "";
-		return '<img src="'.htmlentities($this->_target_src)
-			.'" alt="'.htmlentities(basename($this->_target_src)).'">';
+		return '<img src="'.htmlentities($this->_target_src, ENT_QUOTES)
+			.'" alt="'.htmlentities(basename($this->_target_src), ENT_QUOTES).'">';
 	}
 	
 	/**

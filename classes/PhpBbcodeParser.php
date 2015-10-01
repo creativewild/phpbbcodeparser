@@ -17,6 +17,7 @@ class PhpBbcodeParser implements IBbcodeParser
 	private static $_tagClasses = array(
 		'b' => array('class' => 'BoldBbcodeNode', 'autoclosable' => false),
 		'br' => array('class' => 'BrBbcodeNode', 'autoclosable' => true),
+		'color' => array('class' => 'ColorBbcodeNode', 'autoclosable' => false),
 		'hr' => array('class' => 'HrBbcodeNode', 'autoclosable' => true),
 		'i' => array('class' => 'ItalicBbcodeNode', 'autoclosable' => false),
 		'img' => array('class' => 'ImgBbcodeNode', 'autoclosable' => false),
@@ -53,6 +54,14 @@ class PhpBbcodeParser implements IBbcodeParser
 		$this->_stack->push($base);
 		
 		$this->parseContent();
+		
+		if($this->_pos < $this->_len)
+		{
+			// the parser left some text, because some tags are malformed.
+			// append all of this as plain text
+			$text = new TextBbcodeNode(substr($this->_string, $this->_pos));
+			$base->addChild($text);
+		}
 		
 		if(count($children = $base->getChildren()) === 1)
 			return $children[0];
@@ -175,6 +184,27 @@ class PhpBbcodeParser implements IBbcodeParser
 		if($pos !== false)
 			$this->_pos = $pos + 1;
 		return $this->_stack->pop();
+	}
+	
+	protected function parseColorBbcodeNode(ColorBbcodeNode $node)
+	{
+		$first_rbracket_pos = strpos($this->_string, ']', $this->_pos - 1);
+		$equal_pos = strpos($this->_string, '=', $this->_pos - 1);
+		if($first_rbracket_pos !== false && $equal_pos !== false
+			&& $equal_pos < $first_rbracket_pos
+		) {
+			$colorval = substr($this->_string, $equal_pos + 1, $first_rbracket_pos - $equal_pos - 1);
+			if(preg_match('%^#?[0-9A-Fa-f]{6}$%', $colorval))
+			{
+				// hexa color
+				if(strpos($colorval, '#') === false)
+					$colorval = '#'.$colorval;
+			}
+			$node->setColor($colorval);
+			$this->_pos = $first_rbracket_pos + 1;
+			$this->parseContent();
+		}
+		// else treat as text
 	}
 	
 	protected function parseHrBbcodeNode(HrBbcodeNode $node)

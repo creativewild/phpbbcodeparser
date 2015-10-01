@@ -61,7 +61,7 @@ class SizeBbcodeNode extends AbstractBbcodeNode
 			return '';
 		if($this->_size === null)
 			return parent::toHtml();
-		return '<span style="font-size:'.htmlentities($this->_size).';">'.parent::toHtml().'</span>';
+		return '<span style="font-size:'.$this->e($this->_size).';">'.parent::toHtml().'</span>';
 	}
 	
 	/**
