@@ -28,6 +28,7 @@ class PhpBbcodeParser implements IBbcodeParser
 		'size' => array('class' => 'SizeBbcodeNode', 'autoclosable' => false),
 		'u' => array('class' => 'UnderlineBbcodeNode', 'autoclosable' => false),
 		'url' => array('class' => 'UrlBbcodeNode', 'autoclosable' => false),
+		'youtube' => array('class' => 'YoutubeBbcodeNode', 'autoclosable' => false),
 	);
 	
 	protected $_string = null;
@@ -379,6 +380,38 @@ class PhpBbcodeParser implements IBbcodeParser
 				{
 					// no end tag found: treat as text
 				}
+			}
+		}
+		else
+		{
+			// no end bracket found: treat as text
+		}
+		return $this->_stack->pop();
+	}
+	
+	protected function parseYoutubeBbcodeNode(YoutubeBbcodeNode $node)
+	{
+		$first_rbracket_pos = strpos($this->_string, ']', $this->_pos - 1);
+		if($first_rbracket_pos !== null)
+		{
+			$end = stripos($this->_string, '[/youtube]', $this->_pos);
+			if($end !== null)
+			{
+				$url = substr($this->_string,
+					$first_rbracket_pos + 1,
+					$end - $first_rbracket_pos - 1
+				);
+				if(preg_match('#^[\d\w]{11}$#', $url))
+					$node->setVideoTag($url);
+				else if(preg_match("#v=([\d\w]{11})#", $url, $matches))
+				{
+					$node->setVideoTag($matches[1]);
+				}
+				$this->_pos = $end + 10;
+			}
+			else
+			{
+				// no end tag found: treat as text
 			}
 		}
 		else
