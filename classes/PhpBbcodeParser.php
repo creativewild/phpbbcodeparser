@@ -17,6 +17,7 @@ class PhpBbcodeParser implements IBbcodeParser
 	private static $_tagClasses = array(
 		'b' => array('class' => 'BoldBbcodeNode', 'autoclosable' => false),
 		'br' => array('class' => 'BrBbcodeNode', 'autoclosable' => true),
+		'center' => array('class' => 'CenterBbcodeNode', 'autoclosable' => false),
 		'color' => array('class' => 'ColorBbcodeNode', 'autoclosable' => false),
 		'hr' => array('class' => 'HrBbcodeNode', 'autoclosable' => true),
 		'i' => array('class' => 'ItalicBbcodeNode', 'autoclosable' => false),
@@ -184,6 +185,16 @@ class PhpBbcodeParser implements IBbcodeParser
 		if($pos !== false)
 			$this->_pos = $pos + 1;
 		return $this->_stack->pop();
+	}
+	
+	protected function parseCenterBbcodeNode(CenterBbcodeNode $node)
+	{
+		$first_rbracket_pos = strpos($this->_string, ']', $this->_pos - 1);
+		if($first_rbracket_pos !== false)
+		{
+			$this->_pos = $first_rbracket_pos + 1;
+			$this->parseContent();
+		}
 	}
 	
 	protected function parseColorBbcodeNode(ColorBbcodeNode $node)
