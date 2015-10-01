@@ -22,6 +22,7 @@ class PhpBbcodeParser implements IBbcodeParser
 		'hr' => array('class' => 'HrBbcodeNode', 'autoclosable' => true),
 		'i' => array('class' => 'ItalicBbcodeNode', 'autoclosable' => false),
 		'img' => array('class' => 'ImgBbcodeNode', 'autoclosable' => false),
+		'quote' => array('class' => 'QuoteBbcodeNode', 'autoclosable' => false),
 		's' => array('class' => 'StrikeBbcodeNode', 'autoclosable' => false),
 		'size' => array('class' => 'SizeBbcodeNode', 'autoclosable' => false),
 		'u' => array('class' => 'UnderlineBbcodeNode', 'autoclosable' => false),
@@ -266,6 +267,24 @@ class PhpBbcodeParser implements IBbcodeParser
 			// no end bracket found: treat as text
 		}
 		return $node;
+	}
+	
+	protected function parseQuoteBbcodeNode(QuoteBbcodeNode $node)
+	{
+		$first_rbracket_pos = strpos($this->_string, ']', $this->_pos - 1);
+		if($first_rbracket_pos !== false)
+		{
+			$equal_pos = strpos($this->_string, '=', $this->_pos - 1);
+			if($equal_pos !== false && $equal_pos < $first_rbracket_pos)
+			{
+				// form [quote=author]///[/quote]
+				$author = substr($this->_string,  $equal_pos + 1, $first_rbracket_pos - $equal_pos - 1);
+				$node->setAuthor($author);
+			}
+			// else form [quote]///[/quote]
+			$this->_pos = $first_rbracket_pos + 1;
+			$this->parseContent();
+		}
 	}
 	
 	protected function parseSizeBbcodeNode(SizeBbcodeNode $node)

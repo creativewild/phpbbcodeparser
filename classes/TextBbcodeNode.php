@@ -46,7 +46,7 @@ class TextBbcodeNode implements IBbcodeNode
 	 */
 	public function isEmpty()
 	{
-		return $this->_raw_text === null || $this->_raw_text === "";
+		return $this->_raw_text === null || trim($this->_raw_text) === "";
 	}
 	
 	/**
