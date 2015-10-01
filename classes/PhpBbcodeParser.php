@@ -28,6 +28,9 @@ class PhpBbcodeParser implements IBbcodeParser
 		'quote' => 'QuoteBbcodeNode',
 		's' => 'StrikeBbcodeNode',
 		'size' => 'SizeBbcodeNode',
+		'table' => 'TableBbcodeNode',
+		'td' => 'TableCellBbcodeNode',
+		'tr' => 'TableRowBbcodeNode',
 		'u' => 'UnderlineBbcodeNode',
 		'url' => 'UrlBbcodeNode',
 		'youtube' => 'YoutubeBbcodeNode',
@@ -394,6 +397,42 @@ class PhpBbcodeParser implements IBbcodeParser
 		{
 			// no end bracket found: treat as text
 		}
+		return $node;
+	}
+	
+	protected function parseTableBbcodeNode(TableBbcodeNode $node)
+	{
+		$first_rbracket_pos = strpos($this->_string, ']', $this->_pos - 1);
+		if($first_rbracket_pos !== false)
+		{
+			$this->_pos = $first_rbracket_pos + 1;
+			$this->parseContent();
+		}
+		// else treat as text
+		return $node;
+	}
+	
+	protected function parseTableCellBbcodeNode(TableCellBbcodeNode $node)
+	{
+		$first_rbracket_pos = strpos($this->_string, ']', $this->_pos - 1);
+		if($first_rbracket_pos !== false)
+		{
+			$this->_pos = $first_rbracket_pos + 1;
+			$this->parseContent();
+		}
+		// else treat as text
+		return $node;
+	}
+	
+	protected function parseTableRowBbcodeNode(TableRowBbcodeNode $node)
+	{
+		$first_rbracket_pos = strpos($this->_string, ']', $this->_pos - 1);
+		if($first_rbracket_pos !== false)
+		{
+			$this->_pos = $first_rbracket_pos + 1;
+			$this->parseContent();
+		}
+		// else treat as text
 		return $node;
 	}
 	
