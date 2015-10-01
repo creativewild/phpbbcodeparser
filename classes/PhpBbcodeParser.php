@@ -23,6 +23,8 @@ class PhpBbcodeParser implements IBbcodeParser
 		'hr' => 'HrBbcodeNode',
 		'i' => 'ItalicBbcodeNode',
 		'img' => 'ImgBbcodeNode',
+		'li' => 'ListItemBbcodeNode',
+		'list' => 'ListBbcodeNode',
 		'quote' => 'QuoteBbcodeNode',
 		's' => 'StrikeBbcodeNode',
 		'size' => 'SizeBbcodeNode',
@@ -171,6 +173,8 @@ class PhpBbcodeParser implements IBbcodeParser
 			$word .= $this->_char;
 			$this->getChar();
 		}
+		if($word === '' && $this->_char === '*')
+			$word = 'li';	// to transform [*]...\n to [li]...[/li]
 		$nodeclass = $this->lookupClassname($word);
 		if($nodeclass !== null)
 		{
@@ -297,6 +301,36 @@ class PhpBbcodeParser implements IBbcodeParser
 	}
 	
 	protected function parseItalicBbcodeNode(ItalicBbcodeNode $node)
+	{
+		$first_rbracket_pos = strpos($this->_string, ']', $this->_pos - 1);
+		if($first_rbracket_pos !== false)
+		{
+			$this->_pos = $first_rbracket_pos + 1;
+			$this->parseContent();
+		}
+		else
+		{
+			// no end bracket found: treat as text
+		}
+		return $node;
+	}
+	
+	protected function parseListBbcodeNode(ListBbcodeNode $node)
+	{
+		$first_rbracket_pos = strpos($this->_string, ']', $this->_pos - 1);
+		if($first_rbracket_pos !== false)
+		{
+			$this->_pos = $first_rbracket_pos + 1;
+			$this->parseContent();
+		}
+		else
+		{
+			// no end bracket found: treat as text
+		}
+		return $node;
+	}
+	
+	protected function parseListItemBbcodeNode(ListItemBbcodeNode $node)
 	{
 		$first_rbracket_pos = strpos($this->_string, ']', $this->_pos - 1);
 		if($first_rbracket_pos !== false)
