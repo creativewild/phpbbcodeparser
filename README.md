@@ -22,7 +22,7 @@ The autoloading of all classes of this library is made through composer's autolo
 
 ## Test Suite
 
-The run of the test suite is done via phpunit (4.8+)
+The run of the test suite is done via phpunit (4.8+).
 Download `phpunit.phar` from [their website](https://phpunit.de/index.html).
 
 Then run the `runphpunit` bash script from a console. Both the composer.phar
@@ -44,22 +44,24 @@ of calls to `strpos`, which is linear.
 
 Here is the list:
 
-| Bold 				| [b]{text}[/b] |
-| Italic 			| [i]{text}[/i] |
-| Underline 		| [u]{text}[/u] |
-| Strike-through 	| [s]{text}[/s] |
-| Font-size 		| [size={number}]{text}[/size]
-| Font colour 		| [color={colour}]{text}[/color] 
-| Center text 		| [center]{text}[/center]
-| Code 				| [code]{text}[/code]
-| Quote 			| [quote]{text}[/quote]
-| Named Quote 		| [quote={name}]{text}[/quote]
-| Link 				| [url]{url}[/url]
-| Named Link		| [url={url}]{text}[/url]
-| Image 			| [img]{url}[/img]
-| List				| [list][li]{text}[/li]...[/list]
-| Tables 			| [table][tr][td]{text}[/td]...[/tr]...[/table]
-| Youtube			| [youtube]{video id}[/youtube]
+| Name of tag 		| Syntax											|
+|:------------------|:--------------------------------------------------|
+| Bold 				| [b]{text}[/b]										|
+| Italic 			| [i]{text}[/i]										|
+| Underline 		| [u]{text}[/u]										|
+| Strike-through 	| [s]{text}[/s]										|
+| Font-size 		| [size={number}]{text}[/size]						|
+| Font colour 		| [color={colour}]{text}[/color] 					|
+| Center text 		| [center]{text}[/center]							|
+| Code 				| [code]{text}[/code]								|
+| Quote 			| [quote]{text}[/quote]								|
+| Named Quote 		| [quote={name}]{text}[/quote]						|
+| Link 				| [url]{url}[/url]									|
+| Named Link		| [url={url}]{text}[/url]							|
+| Image 			| [img]{url}[/img]									|
+| List				| [list][li]{text}[/li]...[/list]					|
+| Tables 			| [table][tr][td]{text}[/td]...[/tr]...[/table]		|
+| Youtube			| [youtube]{video id}[/youtube]						|
 
 This list is based on the list by the [bbcode reference](http://www.bbcode.org/reference.php).
 This engine is case-insensitive, meaning that [cEntEr]{...}[/CeNtEr] will work.
@@ -75,10 +77,10 @@ replaces the right tags at the right places.
 
 Here's how the engine should be used.
 
-1. First, retrieve the user's bbcode text with some formular.
-2. Use this piece of code:
+1.  First, retrieve the user's bbcode text with some formular.
+2.  Use this piece of code:
 ```php
-$text = <place here your user's input>;
+$text = "<place here your user's input>";
 $parser = new PhpBbcodeParser();
 $node = $parser->parse($text);
 
@@ -87,13 +89,15 @@ $safebbcode = $node->toString();
 The `$safebbcode` variable will contain a string which is what the engine
 has understand from the inner bbcode. Warning, such string is well bbcode-encoded
 but has still to be considered as user-input, and is NOT html-safe, NOR sql safe.
-3. You can use this string to be stored in some persistant storage, e.g. database.
+
+3.  You can use this string to be stored in some persistant storage, e.g. database.
 
 Then, to get the text back into an html page, do the following:
-1. First, retrieve this content from your persistant storage.
-2. Use this piece of code:
+
+1.  First, retrieve this content from your persistant storage.
+2.  Use this piece of code:
 ```php
-$text = <place here what was stored>;
+$text = "<place here what was stored>";
 $parser = new PhpBbcodeParser();
 $node = $parser->parse($text);
 
@@ -101,9 +105,10 @@ $safeHtml = $node->toHtml();
 ```
 The `$safeHtml` variable contains now the user's text in safe html encoded
 state. 
-3. You can `echo` it directly into your web pages.
 
-! Warning, for the moment, the engine does not guarantee that the valid bbcode
+3.  You can `echo` it directly into your web pages.
+
+! WARNING : For the moment, the engine does not guarantee that the valid bbcode
 tree will input a valid html tree. Nested anchors and/or image tags are possible
 in bbcode and still invalid in Html.
 However, list and table data structures are well build by the parser, and will 
