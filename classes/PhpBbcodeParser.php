@@ -18,6 +18,7 @@ class PhpBbcodeParser implements IBbcodeParser
 		'b' => array('class' => 'BoldBbcodeNode', 'autoclosable' => false),
 		'br' => array('class' => 'BrBbcodeNode', 'autoclosable' => true),
 		'center' => array('class' => 'CenterBbcodeNode', 'autoclosable' => false),
+		'code' =>  array('class' => 'CodeBbcodeNode', 'autoclosable' => false),
 		'color' => array('class' => 'ColorBbcodeNode', 'autoclosable' => false),
 		'hr' => array('class' => 'HrBbcodeNode', 'autoclosable' => true),
 		'i' => array('class' => 'ItalicBbcodeNode', 'autoclosable' => false),
@@ -189,6 +190,16 @@ class PhpBbcodeParser implements IBbcodeParser
 	}
 	
 	protected function parseCenterBbcodeNode(CenterBbcodeNode $node)
+	{
+		$first_rbracket_pos = strpos($this->_string, ']', $this->_pos - 1);
+		if($first_rbracket_pos !== false)
+		{
+			$this->_pos = $first_rbracket_pos + 1;
+			$this->parseContent();
+		}
+	}
+	
+	protected function parseCodeBbcodeNode(CodeBbcodeNode $node)
 	{
 		$first_rbracket_pos = strpos($this->_string, ']', $this->_pos - 1);
 		if($first_rbracket_pos !== false)
