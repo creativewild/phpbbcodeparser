@@ -14,21 +14,21 @@ class PhpBbcodeParser implements IBbcodeParser
 	 * All the conversions from tag names to node class names.
 	 * @var string
 	 */
-	private static $_tagClasses = array(
-		'b' => array('class' => 'BoldBbcodeNode', 'autoclosable' => false),
-		'br' => array('class' => 'BrBbcodeNode', 'autoclosable' => true),
-		'center' => array('class' => 'CenterBbcodeNode', 'autoclosable' => false),
-		'code' =>  array('class' => 'CodeBbcodeNode', 'autoclosable' => false),
-		'color' => array('class' => 'ColorBbcodeNode', 'autoclosable' => false),
-		'hr' => array('class' => 'HrBbcodeNode', 'autoclosable' => true),
-		'i' => array('class' => 'ItalicBbcodeNode', 'autoclosable' => false),
-		'img' => array('class' => 'ImgBbcodeNode', 'autoclosable' => false),
-		'quote' => array('class' => 'QuoteBbcodeNode', 'autoclosable' => false),
-		's' => array('class' => 'StrikeBbcodeNode', 'autoclosable' => false),
-		'size' => array('class' => 'SizeBbcodeNode', 'autoclosable' => false),
-		'u' => array('class' => 'UnderlineBbcodeNode', 'autoclosable' => false),
-		'url' => array('class' => 'UrlBbcodeNode', 'autoclosable' => false),
-		'youtube' => array('class' => 'YoutubeBbcodeNode', 'autoclosable' => false),
+	private $_tagClasses = array(
+		'b' => 'BoldBbcodeNode',
+		'br' => 'BrBbcodeNode',
+		'center' => 'CenterBbcodeNode',
+		'code' => 'CodeBbcodeNode',
+		'color' => 'ColorBbcodeNode',
+		'hr' => 'HrBbcodeNode',
+		'i' => 'ItalicBbcodeNode',
+		'img' => 'ImgBbcodeNode',
+		'quote' => 'QuoteBbcodeNode',
+		's' => 'StrikeBbcodeNode',
+		'size' => 'SizeBbcodeNode',
+		'u' => 'UnderlineBbcodeNode',
+		'url' => 'UrlBbcodeNode',
+		'youtube' => 'YoutubeBbcodeNode',
 	);
 	
 	protected $_string = null;
@@ -41,6 +41,36 @@ class PhpBbcodeParser implements IBbcodeParser
 	 * @var SplStack [AbstractBbcodeNode]
 	 */
 	protected $_stack = null;
+	
+	/**
+	 * Builds a new bbcode parser according to this configuration.
+	 * Confirguration options are :
+	 * - 'classes' option. Should be an array (string:tagname => string:classname)
+	 * 		The classnames should be loadable and should implement IBbcodeNode.
+	 * 		The given classnames will override default classname when parsing
+	 * 		a specific tag. This can be used to parse specific added tags but 
+	 * 		this parser needs to be extended.
+	 * - 'forbidden' option. Should be an array (string:tagname)
+	 * 		This will forbid the parser to interpret any tag with given tagname.
+	 * 		The tags will still be present in the text that's interpreted, but
+	 * 		it will be treated as simple text.
+	 * 
+	 * @param array $config the configuration array
+	 */
+	public function __construct(array $config = array())
+	{
+		if(isset($config['classes']))
+		{
+			$this->_tagClasses = $config['classes'] + $this->_tagClasses;
+		}
+		if(isset($config['forbidden']))
+		{
+			foreach($config['forbidden'] as $forbidden_tag)
+			{
+				unset($this->_tagClasses[$forbidden_tag]);
+			}
+		}
+	}
 	
 	/**
 	 * (non-PHPdoc)
@@ -242,10 +272,10 @@ class PhpBbcodeParser implements IBbcodeParser
 	protected function parseImgBbcodeNode(ImgBbcodeNode $node)
 	{
 		$first_rbracket_pos = strpos($this->_string, ']', $this->_pos - 1);
-		if($first_rbracket_pos !== null)
+		if($first_rbracket_pos !== false)
 		{
 			$end = stripos($this->_string, '[/img]', $this->_pos);
-			if($end !== null)
+			if($end !== false)
 			{
 				$url = substr($this->_string, 
 					$first_rbracket_pos + 1, 
@@ -367,7 +397,7 @@ class PhpBbcodeParser implements IBbcodeParser
 			{
 				$end = stripos($this->_string, '[/url]', $this->_pos);
 				// simple [url]///[/url] syntax
-				if($end !== null)
+				if($end !== false)
 				{
 					$url = substr($this->_string,
 						$first_rbracket_pos + 1,
@@ -392,10 +422,10 @@ class PhpBbcodeParser implements IBbcodeParser
 	protected function parseYoutubeBbcodeNode(YoutubeBbcodeNode $node)
 	{
 		$first_rbracket_pos = strpos($this->_string, ']', $this->_pos - 1);
-		if($first_rbracket_pos !== null)
+		if($first_rbracket_pos !== false)
 		{
 			$end = stripos($this->_string, '[/youtube]', $this->_pos);
-			if($end !== null)
+			if($end !== false)
 			{
 				$url = substr($this->_string,
 					$first_rbracket_pos + 1,
@@ -428,8 +458,8 @@ class PhpBbcodeParser implements IBbcodeParser
 	protected function lookupClassname($tagname)
 	{
 		$tagname = strtolower($tagname);
-		if(isset(self::$_tagClasses[$tagname]))
-			return self::$_tagClasses[$tagname]['class'];
+		if(isset($this->_tagClasses[$tagname]))
+			return $this->_tagClasses[$tagname];
 		return null;
 	}
 	
