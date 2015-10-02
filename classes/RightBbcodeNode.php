@@ -1,13 +1,13 @@
 <?php
 
 /**
- * LeftBbcodeNode class file.
- * 
- * This class represents data which should be aligned from left.
- * 
+ * RightBbcodeNode class file.
+ *
+ * This class represents data which should be aligned from right.
+ *
  * @author Anastaszor
  */
-class LeftBbcodeNode extends AbstractBbcodeNode
+class RightBbcodeNode extends AbstractBbcodeNode
 {
 	
 	/**
@@ -18,7 +18,7 @@ class LeftBbcodeNode extends AbstractBbcodeNode
 	{
 		if($this->isEmpty())
 			return '';
-		return '[left]'.parent::toString().'[/left]';
+		return '[right]'.parent::toString().'[/right]';
 	}
 	
 	/**
@@ -29,7 +29,7 @@ class LeftBbcodeNode extends AbstractBbcodeNode
 	{
 		if($this->isEmpty())
 			return '';
-		return '<div style="text-align:left;">'.parent::toHtml().'</div>';
+		return '<div style="text-align:right;">'.parent::toHtml().'</div>';
 	}
 	
 	/**
@@ -38,7 +38,7 @@ class LeftBbcodeNode extends AbstractBbcodeNode
 	 */
 	public function equals(IBbcodeNode $node)
 	{
-		return $node instanceof LeftBbcodeNode && parent::equals($node);
+		return $node instanceof RightBbcodeNode && parent::equals($node);
 	}
 	
 }

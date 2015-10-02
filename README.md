@@ -44,25 +44,26 @@ of calls to `strpos`, which is linear.
 
 Here is the list:
 
-| Name of tag 		| Syntax											|
-|:------------------|:--------------------------------------------------|
-| Bold 				| [b]{text}[/b]										|
-| Italic 			| [i]{text}[/i]										|
-| Underline 		| [u]{text}[/u]										|
-| Strike-through 	| [s]{text}[/s]										|
-| Font-size 		| [size={number}]{text}[/size]						|
-| Font colour 		| [color={colour}]{text}[/color] 					|
-| Left aligned text | [left]{text}[/left]								|
-| Centered text 	| [center]{text}[/center]							|
-| Code 				| [code]{text}[/code]								|
-| Quote 			| [quote]{text}[/quote]								|
-| Named Quote 		| [quote={name}]{text}[/quote]						|
-| Link 				| [url]{url}[/url]									|
-| Named Link		| [url={url}]{text}[/url]							|
-| Image 			| [img]{url}[/img]									|
-| List				| [list]\[li]{text}[/li]...[/list]					|
-| Tables 			| [table]\[tr]\[td]{text}[/td]...[/tr]...[/table]	|
-| Youtube			| [youtube]{video id}[/youtube]						|
+| Name of tag 			| Syntax											|
+|:----------------------|:--------------------------------------------------|
+| Bold 					| [b]{text}[/b]										|
+| Italic 				| [i]{text}[/i]										|
+| Underline 			| [u]{text}[/u]										|
+| Strike-through 		| [s]{text}[/s]										|
+| Font-size 			| [size={number}]{text}[/size]						|
+| Font colour 			| [color={colour}]{text}[/color] 					|
+| Left aligned text 	| [left]{text}[/left]								|
+| Centered text 		| [center]{text}[/center]							|
+| Right aligned text 	| [right]{text}[/center]							|
+| Code 					| [code]{text}[/code]								|
+| Quote 				| [quote]{text}[/quote]								|
+| Named Quote 			| [quote={name}]{text}[/quote]						|
+| Link 					| [url]{url}[/url]									|
+| Named Link			| [url={url}]{text}[/url]							|
+| Image 				| [img]{url}[/img]									|
+| List					| [list]\[li]{text}[/li]...[/list]					|
+| Tables 				| [table]\[tr]\[td]{text}[/td]...[/tr]...[/table]	|
+| Youtube				| [youtube]{video id}[/youtube]						|
 
 This list is based on the list by the [bbcode reference](http://www.bbcode.org/reference.php).
 This engine is case-insensitive, meaning that [cEntEr]{...}[/CeNtEr] will work.
@@ -128,11 +129,12 @@ The configuration options are as follows:
 $config = array(
 	'classes' => array(
 		'<tagname>' => '<classname>',	// when the engine will parse given tagname
-		...									the classname node will be loaded
+		...								// the classname node will be loaded
 	),
 	'forbidden' => array(
 		'<tagname>',
 		'<tagname2>',
+		...
 	),
 );
 $parser = new PhpBbcodeParser($config);

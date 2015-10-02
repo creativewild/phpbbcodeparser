@@ -29,6 +29,7 @@ class PhpBbcodeParser implements IBbcodeParser
 		'li' => 'ListItemBbcodeNode',
 		'list' => 'ListBbcodeNode',
 		'quote' => 'QuoteBbcodeNode',
+		'right' => 'RightBbcodeNode',
 		's' => 'StrikeBbcodeNode',
 		'size' => 'SizeBbcodeNode',
 		'table' => 'TableBbcodeNode',
@@ -487,6 +488,23 @@ class PhpBbcodeParser implements IBbcodeParser
 				$node->setAuthor($author);
 			}
 			// else form [quote]///[/quote]
+			$this->_pos = $first_rbracket_pos + 1;
+			$this->parseContent();
+		}
+		return $node;
+	}
+	
+	/**
+	 * Parses the text inside a right aligned bbcode node.
+	 *
+	 * @param RightBbcodeNode $node
+	 * @return RightBbcodeNode
+	 */
+	protected function parseRightBbcodeNode(RightBbcodeNode $node)
+	{
+		$first_rbracket_pos = strpos($this->_string, ']', $this->_pos - 1);
+		if($first_rbracket_pos !== false)
+		{
 			$this->_pos = $first_rbracket_pos + 1;
 			$this->parseContent();
 		}
