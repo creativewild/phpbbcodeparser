@@ -5,7 +5,7 @@
  * 
  * This class is made to be the smallest unit into the bbcode tree, a node
  * that only represents the text that's inside, without any formatting.
- * This class is the only class that cannot have children.
+ * This class cannot have children.
  * 
  * @author Anastaszor
  */
@@ -31,9 +31,8 @@ class TextBbcodeNode implements IBbcodeNode
 	}
 	
 	/**
-	 * Appends some text at the end of the text of this text node.
-	 * 
-	 * @param string $string
+	 * (non-PHPdoc)
+	 * @see IBbcodeNode::appendText()
 	 */
 	public function appendText($string)
 	{

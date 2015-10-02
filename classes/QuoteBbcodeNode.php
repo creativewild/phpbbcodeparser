@@ -1,5 +1,14 @@
 <?php
 
+/**
+ * QuoteBbcodeNode class file.
+ * 
+ * This class represents a quote made by a user from another user, or an
+ * external source. The name of the author may be used in the quote, but is
+ * not mandatory.
+ * 
+ * @author Anastaszor
+ */
 class QuoteBbcodeNode extends AbstractBbcodeNode
 {
 	

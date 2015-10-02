@@ -1,5 +1,13 @@
 <?php
 
+/**
+ * ListItemBbcodeNode class file.
+ * 
+ * This class represents a list item. This class can only be used into a list
+ * node, in order to be compliant with the html list structure.
+ * 
+ * @author Anastaszor
+ */
 class ListItemBbcodeNode extends AbstractBbcodeNode
 {
 	

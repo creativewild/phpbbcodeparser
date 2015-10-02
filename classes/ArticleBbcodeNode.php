@@ -11,6 +11,6 @@
 class ArticleBbcodeNode extends AbstractBbcodeNode
 {
 	
-	// nothing to do, this class is intended to be an empty component
+	// nothing to do, this class is intended to be an transparent component
 	
 }

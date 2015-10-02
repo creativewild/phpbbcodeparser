@@ -1,5 +1,12 @@
 <?php
 
+/**
+ * UrlBbcodeNode class file.
+ * 
+ * This class represents a node that targets at another url to make an anchor.
+ * 
+ * @author Anastaszor
+ */
 class UrlBbcodeNode extends AbstractBbcodeNode
 {
 	

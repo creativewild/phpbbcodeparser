@@ -1,5 +1,14 @@
 <?php
 
+/**
+ * TableRowBbcodeNode class file.
+ * 
+ * This class represents a table row. This class can only contain table cells,
+ * to be compliant with the html table structure. This class can only be used
+ * into table nodes, to be compliant with the html table structure.
+ * 
+ * @author Anastaszor
+ */
 class TableRowBbcodeNode extends AbstractBbcodeNode
 {
 	

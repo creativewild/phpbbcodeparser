@@ -1,5 +1,12 @@
 <?php
 
+/**
+ * CenterBbcodeNode class file.
+ * 
+ * This class represents data which should be centered.
+ * 
+ * @author Anastaszor
+ */
 class CenterBbcodeNode extends AbstractBbcodeNode
 {
 	

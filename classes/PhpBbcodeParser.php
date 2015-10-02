@@ -12,6 +12,8 @@ class PhpBbcodeParser implements IBbcodeParser
 	
 	/**
 	 * All the conversions from tag names to node class names.
+	 * This array is updated at construct time when the configuration is 
+	 * given to this class.
 	 * @var string
 	 */
 	private $_tagClasses = array(
@@ -36,12 +38,38 @@ class PhpBbcodeParser implements IBbcodeParser
 		'youtube' => 'YoutubeBbcodeNode',
 	);
 	
+	/**
+	 * The fullstring that is going to be parsed by this parser.
+	 * 
+	 * @var string
+	 */
 	protected $_string = null;
+	/**
+	 * The full length of the above full string. This length is in number
+	 * of octets, and dont care about the charset used.
+	 * 
+	 * @var int
+	 */
 	protected $_len = null;
+	/**
+	 * Current position where the parser is working on.
+	 * @var int
+	 */
 	protected $_pos = null;
+	/**
+	 * Current character on which the parser is working on. It is the character
+	 * at the position $this->_pos on the string $this->_string.
+	 * @var char
+	 */
 	protected $_char = null;
 	
 	/**
+	 * The stack of objects that are currently parsed. Like nodes may be nested,
+	 * objects are push and popped from this stack each time an opening tag
+	 * or an ending tag is encountered by the parser.
+	 * 
+	 * This stack should never be empty, as it always holds the 
+	 * ArticleBbcodeNode which is the base of the stack (and the tree).
 	 * 
 	 * @var SplStack [AbstractBbcodeNode]
 	 */
@@ -92,14 +120,9 @@ class PhpBbcodeParser implements IBbcodeParser
 		$base = new ArticleBbcodeNode();
 		$this->_stack->push($base);
 		
-		$this->parseContent();
-		
-		if($this->_pos < $this->_len)
+		while($this->_pos < $this->_len)
 		{
-			// the parser left some text, because some tags are malformed.
-			// append all of this as plain text
-			$text = new TextBbcodeNode(substr($this->_string, $this->_pos));
-			$base->addChild($text);
+			$this->parseContent();
 		}
 		
 		if(count($children = $base->getChildren()) === 1)
@@ -138,6 +161,12 @@ class PhpBbcodeParser implements IBbcodeParser
 		return $ord >= 48 && $ord <= 57;
 	}
 	
+	/**
+	 * Parses the content of a node. This method returns each time it
+	 * encounters an end group, leading the previous calls of this method to
+	 * terminate. If the text is malformed, and more ending tags are than
+	 * beginning tags, the result is handled by caller method parse().
+	 */
 	protected function parseContent()
 	{
 		while($this->_pos < $this->_len)
@@ -167,6 +196,10 @@ class PhpBbcodeParser implements IBbcodeParser
 		}
 	}
 	
+	/**
+	 * Parses the beginning of a group. This dispatches the new created node
+	 * among methods to parse its inner contents. 
+	 */
 	protected function parseBeginGroup()
 	{
 		$word = "";
@@ -195,6 +228,12 @@ class PhpBbcodeParser implements IBbcodeParser
 		}
 	}
 	
+	/**
+	 * Parses an end group. This method will pop the top object of the stack,
+	 * unless there is no more objects to pop (to keep at least one object in
+	 * it). This method disregards the name of the node to be ended, and will 
+	 * close the topest node on the stack.
+	 */
 	protected function parseEndGroup()
 	{
 		$pos = strpos($this->_string, ']', $this->_pos - 1);
@@ -204,6 +243,12 @@ class PhpBbcodeParser implements IBbcodeParser
 			$this->_stack->pop();
 	}
 	
+	/**
+	 * Parses text inside a new bold bbcode node.
+	 * 
+	 * @param BoldBbcodeNode $node
+	 * @return BoldBbcodeNode
+	 */
 	protected function parseBoldBbcodeNode(BoldBbcodeNode $node)
 	{
 		$first_rbracket_pos = strpos($this->_string, ']', $this->_pos - 1);
@@ -219,6 +264,12 @@ class PhpBbcodeParser implements IBbcodeParser
 		return $node;
 	}
 	
+	/**
+	 * Parses the text for a br bbcode node.
+	 * 
+	 * @param BrBbcodeNode $node
+	 * @return BrBbcodeNode
+	 */
 	protected function parseBrBbcodeNode(BrBbcodeNode $node)
 	{
 		$pos = strpos($this->_string, ']', $this->_pos - 1);
@@ -227,6 +278,12 @@ class PhpBbcodeParser implements IBbcodeParser
 		return $this->_stack->pop();
 	}
 	
+	/**
+	 * Parses the text inside a new center bbcode node.
+	 * 
+	 * @param CenterBbcodeNode $node
+	 * @return CenterBbcodeNode
+	 */
 	protected function parseCenterBbcodeNode(CenterBbcodeNode $node)
 	{
 		$first_rbracket_pos = strpos($this->_string, ']', $this->_pos - 1);
@@ -235,8 +292,15 @@ class PhpBbcodeParser implements IBbcodeParser
 			$this->_pos = $first_rbracket_pos + 1;
 			$this->parseContent();
 		}
+		return $node;
 	}
 	
+	/**
+	 * Parses the text inside a new code bbcode node.
+	 * 
+	 * @param CodeBbcodeNode $node
+	 * @return CodeBbcodeNode
+	 */
 	protected function parseCodeBbcodeNode(CodeBbcodeNode $node)
 	{
 		$first_rbracket_pos = strpos($this->_string, ']', $this->_pos - 1);
@@ -245,8 +309,15 @@ class PhpBbcodeParser implements IBbcodeParser
 			$this->_pos = $first_rbracket_pos + 1;
 			$this->parseContent();
 		}
+		return $node;
 	}
 	
+	/**
+	 * Parses the text inside a new color bbcode node.
+	 * 
+	 * @param ColorBbcodeNode $node
+	 * @return ColorBbcodeNode
+	 */
 	protected function parseColorBbcodeNode(ColorBbcodeNode $node)
 	{
 		$first_rbracket_pos = strpos($this->_string, ']', $this->_pos - 1);
@@ -266,8 +337,15 @@ class PhpBbcodeParser implements IBbcodeParser
 			$this->parseContent();
 		}
 		// else treat as text
+		return $node;
 	}
 	
+	/**
+	 * Parses the text for an hr bbcode node.
+	 * 
+	 * @param HrBbcodeNode $node
+	 * @return HrBbcodeNode
+	 */
 	protected function parseHrBbcodeNode(HrBbcodeNode $node)
 	{
 		$pos = strpos($this->_string, ']', $this->_pos - 1);
@@ -276,6 +354,12 @@ class PhpBbcodeParser implements IBbcodeParser
 		return $this->_stack->pop();
 	}
 	
+	/**
+	 * Parses the text for an image bbcode node.
+	 * 
+	 * @param ImgBbcodeNode $node
+	 * @return ImgBbcodeNode
+	 */
 	protected function parseImgBbcodeNode(ImgBbcodeNode $node)
 	{
 		$first_rbracket_pos = strpos($this->_string, ']', $this->_pos - 1);
@@ -303,6 +387,12 @@ class PhpBbcodeParser implements IBbcodeParser
 		return $this->_stack->pop();
 	}
 	
+	/**
+	 * Parses the text inside a new italic bbcode node.
+	 * 
+	 * @param ItalicBbcodeNode $node
+	 * @return ItalicBbcodeNode
+	 */
 	protected function parseItalicBbcodeNode(ItalicBbcodeNode $node)
 	{
 		$first_rbracket_pos = strpos($this->_string, ']', $this->_pos - 1);
@@ -318,6 +408,12 @@ class PhpBbcodeParser implements IBbcodeParser
 		return $node;
 	}
 	
+	/**
+	 * Parses the text inside a new list bbcode node.
+	 * 
+	 * @param ListBbcodeNode $node
+	 * @return ListBbcodeNode
+	 */
 	protected function parseListBbcodeNode(ListBbcodeNode $node)
 	{
 		$first_rbracket_pos = strpos($this->_string, ']', $this->_pos - 1);
@@ -333,6 +429,12 @@ class PhpBbcodeParser implements IBbcodeParser
 		return $node;
 	}
 	
+	/**
+	 * Parses the text inside a new list item bbcode node.
+	 * 
+	 * @param ListItemBbcodeNode $node
+	 * @return ListItemBbcodeNode
+	 */
 	protected function parseListItemBbcodeNode(ListItemBbcodeNode $node)
 	{
 		$first_rbracket_pos = strpos($this->_string, ']', $this->_pos - 1);
@@ -348,6 +450,12 @@ class PhpBbcodeParser implements IBbcodeParser
 		return $node;
 	}
 	
+	/**
+	 * Parses the text inside a new quote bbcode node.
+	 * 
+	 * @param QuoteBbcodeNode $node
+	 * @return QuoteBbcodeNode
+	 */
 	protected function parseQuoteBbcodeNode(QuoteBbcodeNode $node)
 	{
 		$first_rbracket_pos = strpos($this->_string, ']', $this->_pos - 1);
@@ -364,8 +472,15 @@ class PhpBbcodeParser implements IBbcodeParser
 			$this->_pos = $first_rbracket_pos + 1;
 			$this->parseContent();
 		}
+		return $node;
 	}
 	
+	/**
+	 * Parses the text inside a new size bbcode node.
+	 * 
+	 * @param SizeBbcodeNode $node
+	 * @return SizeBbcodeNode
+	 */
 	protected function parseSizeBbcodeNode(SizeBbcodeNode $node)
 	{
 		$first_rbracket_pos = strpos($this->_string, ']', $this->_pos - 1);
@@ -385,6 +500,12 @@ class PhpBbcodeParser implements IBbcodeParser
 		return $node;
 	}
 	
+	/**
+	 * Parses the text inside a new strike bbcode node.
+	 * 
+	 * @param StrikeBbcodeNode $node
+	 * @return StrikeBbcodeNode
+	 */
 	protected function parseStrikeBbcodeNode(StrikeBbcodeNode $node)
 	{
 		$first_rbracket_pos = strpos($this->_string, ']', $this->_pos - 1);
@@ -400,6 +521,12 @@ class PhpBbcodeParser implements IBbcodeParser
 		return $node;
 	}
 	
+	/**
+	 * Parses the text inside a new table bbcode node.
+	 * 
+	 * @param TableBbcodeNode $node
+	 * @return TableBbcodeNode
+	 */
 	protected function parseTableBbcodeNode(TableBbcodeNode $node)
 	{
 		$first_rbracket_pos = strpos($this->_string, ']', $this->_pos - 1);
@@ -412,6 +539,12 @@ class PhpBbcodeParser implements IBbcodeParser
 		return $node;
 	}
 	
+	/**
+	 * Parses the text inside a new table cell bbcode node.
+	 * 
+	 * @param TableCellBbcodeNode $node
+	 * @return TableCellBbcodeNode
+	 */
 	protected function parseTableCellBbcodeNode(TableCellBbcodeNode $node)
 	{
 		$first_rbracket_pos = strpos($this->_string, ']', $this->_pos - 1);
@@ -424,6 +557,12 @@ class PhpBbcodeParser implements IBbcodeParser
 		return $node;
 	}
 	
+	/**
+	 * Parses the text inside a new table row bbcode node.
+	 * 
+	 * @param TableRowBbcodeNode $node
+	 * @return TableRowBbcodeNode
+	 */
 	protected function parseTableRowBbcodeNode(TableRowBbcodeNode $node)
 	{
 		$first_rbracket_pos = strpos($this->_string, ']', $this->_pos - 1);
@@ -436,6 +575,12 @@ class PhpBbcodeParser implements IBbcodeParser
 		return $node;
 	}
 	
+	/**
+	 * Parses the text inside a new underline row bbcode node.
+	 * 
+	 * @param UnderlineBbcodeNode $node
+	 * @return UnderlineBbcodeNode
+	 */
 	protected function parseUnderlineBbcodeNode(UnderlineBbcodeNode $node)
 	{
 		$first_rbracket_pos = strpos($this->_string, ']', $this->_pos - 1);
@@ -451,6 +596,12 @@ class PhpBbcodeParser implements IBbcodeParser
 		return $node;
 	}
 	
+	/**
+	 * Parses the text inside a new url bbcode node.
+	 * 
+	 * @param UrlBbcodeNode $node
+	 * @return UrlBbcodeNode
+	 */
 	protected function parseUrlBbcodeNode(UrlBbcodeNode $node)
 	{
 		$equals_sign_pos = strpos($this->_string, '=', $this->_pos - 1);
@@ -492,6 +643,12 @@ class PhpBbcodeParser implements IBbcodeParser
 		return $this->_stack->pop();
 	}
 	
+	/**
+	 * Parses the text for a youtube bbcode node.
+	 * 
+	 * @param YoutubeBbcodeNode $node
+	 * @return YoutubeBbcodeNode
+	 */
 	protected function parseYoutubeBbcodeNode(YoutubeBbcodeNode $node)
 	{
 		$first_rbracket_pos = strpos($this->_string, ']', $this->_pos - 1);
@@ -525,8 +682,12 @@ class PhpBbcodeParser implements IBbcodeParser
 	}
 	
 	/**
+	 * Seeks for a known classname within the parsing classmap. This also 
+	 * seeks for configurationa-added classnames, and will not find any class
+	 * if the tag was denied by configuration.
 	 * 
 	 * @param string $tagname
+	 * @return string the classname for the tag if any, null else.
 	 */
 	protected function lookupClassname($tagname)
 	{

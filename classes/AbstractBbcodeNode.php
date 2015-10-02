@@ -38,8 +38,8 @@ abstract class AbstractBbcodeNode implements IBbcodeNode
 	}
 	
 	/**
-	 * 
-	 * @param string $string
+	 * (non-PHPdoc)
+	 * @see IBbcodeNode::appendText()
 	 */
 	public function appendText($string)
 	{

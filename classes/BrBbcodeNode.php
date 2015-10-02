@@ -1,5 +1,12 @@
 <?php
 
+/**
+ * BrBbcodeNode class file.
+ * 
+ * This class represents a forced line breaks. This class cannot have children.
+ * 
+ * @author Anastaszor
+ */
 class BrBbcodeNode implements IBbcodeNode
 {
 	

@@ -1,5 +1,14 @@
 <?php
 
+/**
+ * ImgBbcodeNode class file.
+ * 
+ * This class represents an image. This class cannot have children. This class
+ * does not test if the given source url is valid, nor if the resource it 
+ * points at exists.
+ * 
+ * @author Anastaszor
+ */
 class ImgBbcodeNode implements IBbcodeNode
 {
 	

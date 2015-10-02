@@ -22,7 +22,7 @@ The autoloading of all classes of this library is made through composer's autolo
 
 ## Test Suite
 
-The run of the test suite is done via phpunit (4.8+).
+The run of the test suite is done via phpunit (4.5+).
 Download `phpunit.phar` from [their website](https://phpunit.de/index.html).
 
 Then run the `runphpunit` bash script from a console. Both the composer.phar
@@ -59,8 +59,8 @@ Here is the list:
 | Link 				| [url]{url}[/url]									|
 | Named Link		| [url={url}]{text}[/url]							|
 | Image 			| [img]{url}[/img]									|
-| List				| [list][li]{text}[/li]...[/list]					|
-| Tables 			| [table][tr][td]{text}[/td]...[/tr]...[/table]		|
+| List				| [list]\[li]{text}[/li]...[/list]					|
+| Tables 			| [table]\[tr]\[td]{text}[/td]...[/tr]...[/table]		|
 | Youtube			| [youtube]{video id}[/youtube]						|
 
 This list is based on the list by the [bbcode reference](http://www.bbcode.org/reference.php).

@@ -1,5 +1,14 @@
 <?php
 
+/**
+ * YoutubeBbcodeNode class file.
+ * 
+ * This class represents a node which targets a specific youtube video.
+ * This tag holds only the tag information of the video and reconstructs
+ * the complete url.
+ * 
+ * @author Anastaszor
+ */
 class YoutubeBbcodeNode implements IBbcodeNode
 {
 	

@@ -12,6 +12,12 @@ interface IBbcodeNode
 {
 	
 	/**
+	 * Appends argument string at the end of the tree represented by this node.
+	 * 
+	 * @param string $string
+	 */
+	public function appendText($string);
+	/**
 	 * True if this subtree represents an empty string, false else.
 	 * 
 	 * @return boolean

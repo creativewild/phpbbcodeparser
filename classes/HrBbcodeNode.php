@@ -1,5 +1,12 @@
 <?php
 
+/**
+ * HrBbcodeNode class file.
+ * 
+ * This class represents an Horizontal Rule. This class cannot have children.
+ * 
+ * @author Anastaszor
+ */
 class HrBbcodeNode implements IBbcodeNode
 {
 	

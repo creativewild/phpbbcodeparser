@@ -1,5 +1,13 @@
 <?php
 
+/**
+ * StrikeBbcodeNode class file.
+ * 
+ * This node represents some text which is striked through, i.e. a line is
+ * drawn in the middle of the letters.
+ * 
+ * @author Anastaszor
+ */
 class StrikeBbcodeNode extends AbstractBbcodeNode
 {
 	

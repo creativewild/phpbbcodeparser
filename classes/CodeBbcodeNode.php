@@ -1,5 +1,13 @@
 <?php
 
+/**
+ * CodeBbcodeNode class file.
+ * 
+ * This class represents some text where the spaces between characters matters.
+ * Such nodes are generally implemented with monospaced fonts.
+ * 
+ * @author Anastaszor
+ */
 class CodeBbcodeNode extends AbstractBbcodeNode
 {
 	

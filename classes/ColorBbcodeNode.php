@@ -1,5 +1,13 @@
 <?php
 
+/**
+ * ColorBbcodeNode class file.
+ * 
+ * This class represents a node where the text will have another color, given
+ * by a text representing its id, or by its 6-hexa-digit code.
+ * 
+ * @author Anastaszor
+ */
 class ColorBbcodeNode extends AbstractBbcodeNode
 {
 	
