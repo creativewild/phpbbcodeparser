@@ -143,6 +143,8 @@ Note that all <classname> class names for tags must implement the `IBbcodeNode`
 interface. Also, using new classnames, the PhpBbcodeParser MUST be extended
 in order to be able to parse the new tag for the classname, implementing the
 function with signature `public void parse<classname>(<classname> $node);`.
+If it doesn't, the PhpBbcodeParser will parse the node as if it was a vanilla 
+tag with no attributes, using the `parseDefaultNode()` method.
 
 Forbidden nodes will stay as-is as text in the user input, without any formatting.
 In case the user chooses to use such tags, they will be in the html as well as

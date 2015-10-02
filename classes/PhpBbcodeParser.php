@@ -221,7 +221,14 @@ class PhpBbcodeParser implements IBbcodeParser
 			$element = $this->_stack->top();
 			$element->addChild($node);
 			$this->_stack->push($node);
-			$this->$methodname($node);
+			if(method_exists($this, $methodname))
+			{
+				$this->$methodname($node);
+			}
+			else
+			{
+				$this->parseDefaultNode($node);
+			}
 		}
 		else
 		{
@@ -246,12 +253,29 @@ class PhpBbcodeParser implements IBbcodeParser
 	}
 	
 	/**
-	 * Parses text inside a new bold bbcode node.
+	 * Parses the text inside a node. This is the default method for parsing
+	 * most of the nodes. This method is sufficent for parsing any node that
+	 * has no attributes, and which value is only made of its existence.
 	 * 
-	 * @param BoldBbcodeNode $node
-	 * @return BoldBbcodeNode
+	 * By Default, the nodes that are parsed through this method are :
+	 * BoldBbcodeNode,
+	 * CenterBbcodeNode,
+	 * CodeBbcodeNode,
+	 * ItalicBbcodeNode,
+	 * LeftBbcodeNode,
+	 * ListBbcodeNode,
+	 * ListItemBbcodeNode,
+	 * RightBbcodeNode,
+	 * StrikeBbcodeNode,
+	 * TableBbcodeNode,
+	 * TableCellBbcodeNode,
+	 * TableRowBbcodeNode,
+	 * UnderlineBbcodeNode
+	 * 
+	 * @param IBbcodeNode $node
+	 * @return IBbcodeNode
 	 */
-	protected function parseBoldBbcodeNode(BoldBbcodeNode $node)
+	protected function parseDefaultNode(IBbcodeNode $node)
 	{
 		$first_rbracket_pos = strpos($this->_string, ']', $this->_pos - 1);
 		if($first_rbracket_pos !== false)
@@ -259,12 +283,9 @@ class PhpBbcodeParser implements IBbcodeParser
 			$this->_pos = $first_rbracket_pos + 1;
 			$this->parseContent();
 		}
-		else
-		{
-			// no end bracket found: treat as text
-		}
 		return $node;
 	}
+	
 	
 	/**
 	 * Parses the text for a br bbcode node.
@@ -278,40 +299,6 @@ class PhpBbcodeParser implements IBbcodeParser
 		if($pos !== false)
 			$this->_pos = $pos + 1;
 		return $this->_stack->pop();
-	}
-	
-	/**
-	 * Parses the text inside a new center aligned bbcode node.
-	 * 
-	 * @param CenterBbcodeNode $node
-	 * @return CenterBbcodeNode
-	 */
-	protected function parseCenterBbcodeNode(CenterBbcodeNode $node)
-	{
-		$first_rbracket_pos = strpos($this->_string, ']', $this->_pos - 1);
-		if($first_rbracket_pos !== false)
-		{
-			$this->_pos = $first_rbracket_pos + 1;
-			$this->parseContent();
-		}
-		return $node;
-	}
-	
-	/**
-	 * Parses the text inside a new code bbcode node.
-	 * 
-	 * @param CodeBbcodeNode $node
-	 * @return CodeBbcodeNode
-	 */
-	protected function parseCodeBbcodeNode(CodeBbcodeNode $node)
-	{
-		$first_rbracket_pos = strpos($this->_string, ']', $this->_pos - 1);
-		if($first_rbracket_pos !== false)
-		{
-			$this->_pos = $first_rbracket_pos + 1;
-			$this->parseContent();
-		}
-		return $node;
 	}
 	
 	/**
@@ -390,86 +377,6 @@ class PhpBbcodeParser implements IBbcodeParser
 	}
 	
 	/**
-	 * Parses the text inside a new italic bbcode node.
-	 * 
-	 * @param ItalicBbcodeNode $node
-	 * @return ItalicBbcodeNode
-	 */
-	protected function parseItalicBbcodeNode(ItalicBbcodeNode $node)
-	{
-		$first_rbracket_pos = strpos($this->_string, ']', $this->_pos - 1);
-		if($first_rbracket_pos !== false)
-		{
-			$this->_pos = $first_rbracket_pos + 1;
-			$this->parseContent();
-		}
-		else
-		{
-			// no end bracket found: treat as text
-		}
-		return $node;
-	}
-	
-	/**
-	 * Parses the text inside a left aligned bbcode node.
-	 * 
-	 * @param LeftBbcodeNode $node
-	 * @return LeftBbcodeNode
-	 */
-	protected function parseLeftBbcodeNode(LeftBbcodeNode $node)
-	{
-		$first_rbracket_pos = strpos($this->_string, ']', $this->_pos - 1);
-		if($first_rbracket_pos !== false)
-		{
-			$this->_pos = $first_rbracket_pos + 1;
-			$this->parseContent();
-		}
-		return $node;
-	}
-	
-	/**
-	 * Parses the text inside a new list bbcode node.
-	 * 
-	 * @param ListBbcodeNode $node
-	 * @return ListBbcodeNode
-	 */
-	protected function parseListBbcodeNode(ListBbcodeNode $node)
-	{
-		$first_rbracket_pos = strpos($this->_string, ']', $this->_pos - 1);
-		if($first_rbracket_pos !== false)
-		{
-			$this->_pos = $first_rbracket_pos + 1;
-			$this->parseContent();
-		}
-		else
-		{
-			// no end bracket found: treat as text
-		}
-		return $node;
-	}
-	
-	/**
-	 * Parses the text inside a new list item bbcode node.
-	 * 
-	 * @param ListItemBbcodeNode $node
-	 * @return ListItemBbcodeNode
-	 */
-	protected function parseListItemBbcodeNode(ListItemBbcodeNode $node)
-	{
-		$first_rbracket_pos = strpos($this->_string, ']', $this->_pos - 1);
-		if($first_rbracket_pos !== false)
-		{
-			$this->_pos = $first_rbracket_pos + 1;
-			$this->parseContent();
-		}
-		else
-		{
-			// no end bracket found: treat as text
-		}
-		return $node;
-	}
-	
-	/**
 	 * Parses the text inside a new quote bbcode node.
 	 * 
 	 * @param QuoteBbcodeNode $node
@@ -488,23 +395,6 @@ class PhpBbcodeParser implements IBbcodeParser
 				$node->setAuthor($author);
 			}
 			// else form [quote]///[/quote]
-			$this->_pos = $first_rbracket_pos + 1;
-			$this->parseContent();
-		}
-		return $node;
-	}
-	
-	/**
-	 * Parses the text inside a right aligned bbcode node.
-	 *
-	 * @param RightBbcodeNode $node
-	 * @return RightBbcodeNode
-	 */
-	protected function parseRightBbcodeNode(RightBbcodeNode $node)
-	{
-		$first_rbracket_pos = strpos($this->_string, ']', $this->_pos - 1);
-		if($first_rbracket_pos !== false)
-		{
 			$this->_pos = $first_rbracket_pos + 1;
 			$this->parseContent();
 		}
@@ -533,102 +423,6 @@ class PhpBbcodeParser implements IBbcodeParser
 			$this->parseContent();
 		}
 		// else treat as text
-		return $node;
-	}
-	
-	/**
-	 * Parses the text inside a new strike bbcode node.
-	 * 
-	 * @param StrikeBbcodeNode $node
-	 * @return StrikeBbcodeNode
-	 */
-	protected function parseStrikeBbcodeNode(StrikeBbcodeNode $node)
-	{
-		$first_rbracket_pos = strpos($this->_string, ']', $this->_pos - 1);
-		if($first_rbracket_pos !== false)
-		{
-			$this->_pos = $first_rbracket_pos + 1;
-			$this->parseContent();
-		}
-		else
-		{
-			// no end bracket found: treat as text
-		}
-		return $node;
-	}
-	
-	/**
-	 * Parses the text inside a new table bbcode node.
-	 * 
-	 * @param TableBbcodeNode $node
-	 * @return TableBbcodeNode
-	 */
-	protected function parseTableBbcodeNode(TableBbcodeNode $node)
-	{
-		$first_rbracket_pos = strpos($this->_string, ']', $this->_pos - 1);
-		if($first_rbracket_pos !== false)
-		{
-			$this->_pos = $first_rbracket_pos + 1;
-			$this->parseContent();
-		}
-		// else treat as text
-		return $node;
-	}
-	
-	/**
-	 * Parses the text inside a new table cell bbcode node.
-	 * 
-	 * @param TableCellBbcodeNode $node
-	 * @return TableCellBbcodeNode
-	 */
-	protected function parseTableCellBbcodeNode(TableCellBbcodeNode $node)
-	{
-		$first_rbracket_pos = strpos($this->_string, ']', $this->_pos - 1);
-		if($first_rbracket_pos !== false)
-		{
-			$this->_pos = $first_rbracket_pos + 1;
-			$this->parseContent();
-		}
-		// else treat as text
-		return $node;
-	}
-	
-	/**
-	 * Parses the text inside a new table row bbcode node.
-	 * 
-	 * @param TableRowBbcodeNode $node
-	 * @return TableRowBbcodeNode
-	 */
-	protected function parseTableRowBbcodeNode(TableRowBbcodeNode $node)
-	{
-		$first_rbracket_pos = strpos($this->_string, ']', $this->_pos - 1);
-		if($first_rbracket_pos !== false)
-		{
-			$this->_pos = $first_rbracket_pos + 1;
-			$this->parseContent();
-		}
-		// else treat as text
-		return $node;
-	}
-	
-	/**
-	 * Parses the text inside a new underline row bbcode node.
-	 * 
-	 * @param UnderlineBbcodeNode $node
-	 * @return UnderlineBbcodeNode
-	 */
-	protected function parseUnderlineBbcodeNode(UnderlineBbcodeNode $node)
-	{
-		$first_rbracket_pos = strpos($this->_string, ']', $this->_pos - 1);
-		if($first_rbracket_pos !== false)
-		{
-			$this->_pos = $first_rbracket_pos + 1;
-			$this->parseContent();
-		}
-		else
-		{
-			// no end bracket found: treat as text
-		}
 		return $node;
 	}
 	
