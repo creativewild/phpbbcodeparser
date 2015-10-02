@@ -12,7 +12,7 @@ Then add to your composer.json :
 ```json
 	"require": {
 		...
-		"anastaszor/phpbbcodeparser": "1.0+"
+		"anastaszor/phpbbcodeparser": "1.*"
 		...
 	}
 ```
@@ -60,7 +60,7 @@ Here is the list:
 | Named Link		| [url={url}]{text}[/url]							|
 | Image 			| [img]{url}[/img]									|
 | List				| [list]\[li]{text}[/li]...[/list]					|
-| Tables 			| [table]\[tr]\[td]{text}[/td]...[/tr]...[/table]		|
+| Tables 			| [table]\[tr]\[td]{text}[/td]...[/tr]...[/table]	|
 | Youtube			| [youtube]{video id}[/youtube]						|
 
 This list is based on the list by the [bbcode reference](http://www.bbcode.org/reference.php).

@@ -1,6 +1,27 @@
 {
+	"name": "phpbbcodeparser",
+	"description": "A library to parse bbcode without regexes",
+	"version": "1.0.0",
+	"type": "library",
+	"keywords": [
+		"php", "phpbb", "bbcode", "parser"
+	],
+	"homepage": "https://github.com/Anastaszor/phpbbcodeparser",
+	"time": "2015-10-02",
+	"license": "MIT",
+	"authors": [
+		{
+			"name": "Anastaszor",
+			"email": "anastaszor@gmail.com",
+			"role": "developer"
+		}
+	],
+	"support": {
+		"issues": "https://github.com/Anastaszor/phpbbcodeparser/issues",
+		"source": "https://github.com/Anastaszor/phpbbcodeparser"
+	},
 	"require":{
-	
+		
 	},
 	"autoload": {
 		"classmap": [
