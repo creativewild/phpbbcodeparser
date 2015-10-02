@@ -52,7 +52,8 @@ Here is the list:
 | Strike-through 	| [s]{text}[/s]										|
 | Font-size 		| [size={number}]{text}[/size]						|
 | Font colour 		| [color={colour}]{text}[/color] 					|
-| Center text 		| [center]{text}[/center]							|
+| Left aligned text | [left]{text}[/left]								|
+| Centered text 	| [center]{text}[/center]							|
 | Code 				| [code]{text}[/code]								|
 | Quote 			| [quote]{text}[/quote]								|
 | Named Quote 		| [quote={name}]{text}[/quote]						|

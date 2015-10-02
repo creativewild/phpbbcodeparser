@@ -25,6 +25,7 @@ class PhpBbcodeParser implements IBbcodeParser
 		'hr' => 'HrBbcodeNode',
 		'i' => 'ItalicBbcodeNode',
 		'img' => 'ImgBbcodeNode',
+		'left' => 'LeftBbcodeNode',
 		'li' => 'ListItemBbcodeNode',
 		'list' => 'ListBbcodeNode',
 		'quote' => 'QuoteBbcodeNode',
@@ -279,7 +280,7 @@ class PhpBbcodeParser implements IBbcodeParser
 	}
 	
 	/**
-	 * Parses the text inside a new center bbcode node.
+	 * Parses the text inside a new center aligned bbcode node.
 	 * 
 	 * @param CenterBbcodeNode $node
 	 * @return CenterBbcodeNode
@@ -404,6 +405,23 @@ class PhpBbcodeParser implements IBbcodeParser
 		else
 		{
 			// no end bracket found: treat as text
+		}
+		return $node;
+	}
+	
+	/**
+	 * Parses the text inside a left aligned bbcode node.
+	 * 
+	 * @param LeftBbcodeNode $node
+	 * @return LeftBbcodeNode
+	 */
+	protected function parseLeftBbcodeNode(LeftBbcodeNode $node)
+	{
+		$first_rbracket_pos = strpos($this->_string, ']', $this->_pos - 1);
+		if($first_rbracket_pos !== false)
+		{
+			$this->_pos = $first_rbracket_pos + 1;
+			$this->parseContent();
 		}
 		return $node;
 	}

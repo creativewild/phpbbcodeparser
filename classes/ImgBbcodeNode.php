@@ -39,6 +39,15 @@ class ImgBbcodeNode implements IBbcodeNode
 	
 	/**
 	 * (non-PHPdoc)
+	 * @see IBbcodeNode::appendText()
+	 */
+	public function appendText($string)
+	{
+		// does nothing
+	}
+	
+	/**
+	 * (non-PHPdoc)
 	 * @see IBbcodeNode::toString()
 	 */
 	public function toString()
