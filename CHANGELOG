@@ -1,5 +1,6 @@
 1.0.3 	Changed license to LGPL2.1+
 		Fixed inheritance bug when having custom rendering classes.
+		Added tag [img=WxH]
 
 1.0.2	Adding tag [left]
 		Adding tag [right]

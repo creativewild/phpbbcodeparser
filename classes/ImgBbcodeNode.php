@@ -17,6 +17,16 @@ class ImgBbcodeNode implements IBbcodeNode
 	 * @var string
 	 */
 	private $_target_src = null;
+	/**
+	 * 
+	 * @var int
+	 */
+	private $_width = null;
+	/**
+	 * 
+	 * @var int
+	 */
+	private $_height = null;
 	
 	/**
 	 * Sets target image url with given url.
@@ -26,6 +36,17 @@ class ImgBbcodeNode implements IBbcodeNode
 	public function setUrl($url)
 	{
 		$this->_target_src = $url;
+	}
+	
+	/**
+	 * Sets the dimensions, in pixels, at which the image should be displayed.
+	 * @param int $width
+	 * @param int $height
+	 */
+	public function setDimensions($width, $height)
+	{
+		$this->_width = $width;
+		$this->_height = $height;
 	}
 	
 	/**
@@ -54,7 +75,9 @@ class ImgBbcodeNode implements IBbcodeNode
 	{
 		if($this->isEmpty())
 			return "";
-		return '[img]'.$this->_target_src.'[/img]';
+		if($this->_height === null || $this->_width === null)
+			return '[img]'.$this->_target_src.'[/img]';
+		return '[img='.$this->_width.'x'.$this->_height.']'.$this->_target_src.'[/img]';
 	}
 	
 	/**
@@ -65,8 +88,13 @@ class ImgBbcodeNode implements IBbcodeNode
 	{
 		if($this->isEmpty())
 			return "";
-		return '<img src="'.htmlentities($this->_target_src, ENT_QUOTES)
-			.'" alt="'.htmlentities(basename($this->_target_src), ENT_QUOTES).'">';
+		$str = '<img src="'.htmlentities($this->_target_src, ENT_QUOTES)
+			.'" alt="'.htmlentities(basename($this->_target_src), ENT_QUOTES).'"';
+		if($this->_height === null || $this->_width === null)
+			return $str .'>';
+		else
+			return $str . ' style="width:'.htmlentities($this->_width, ENT_QUOTES)
+				.'px; height:'.htmlentities($this->_height, ENT_QUOTES).'px;">';
 	}
 	
 	/**

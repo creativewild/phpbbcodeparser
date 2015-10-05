@@ -61,6 +61,7 @@ Here is the list:
 | Link 					| [url]{url}[/url]									|
 | Named Link			| [url={url}]{text}[/url]							|
 | Image 				| [img]{url}[/img]									|
+| Dimensionned Image 	| [img={width}x{height}]{url}[/img]					|
 | List					| [list]\[li]{text}[/li]...[/list]					|
 | Tables 				| [table]\[tr]\[td]{text}[/td]...[/tr]...[/table]	|
 | Youtube				| [youtube]{video id}[/youtube]						|

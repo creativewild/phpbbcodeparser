@@ -354,6 +354,17 @@ class PhpBbcodeParser implements IBbcodeParser
 		$first_rbracket_pos = strpos($this->_string, ']', $this->_pos - 1);
 		if($first_rbracket_pos !== false)
 		{
+			$equal_pos = strpos($this->_string, '=', $this->_pos - 1);
+			if($equal_pos !== false && $equal_pos < $first_rbracket_pos)
+			{
+				// form [img=widthxheight]///[/img]
+				$dimensions = substr($this->_string,  $equal_pos + 1, $first_rbracket_pos - $equal_pos - 1);
+				if(preg_match('#^(\d+)x(\d+)$#', $dimensions, $matches))
+				{
+					$node->setDimensions((int) $matches[1], (int) $matches[2]);
+				}
+			}
+			// else form [img]///[/img]
 			$end = stripos($this->_string, '[/img]', $this->_pos);
 			if($end !== false)
 			{
