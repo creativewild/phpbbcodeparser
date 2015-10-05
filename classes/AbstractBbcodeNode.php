@@ -87,10 +87,11 @@ abstract class AbstractBbcodeNode implements IBbcodeNode
 	}
 	
 	/**
-	 * (non-PHPdoc)
-	 * @see IBbcodeNode::toString()
+	 * Displays the text for bbcode rendering that holds only this node's
+	 * children text.
+	 * @return string
 	 */
-	public function toString()
+	public function childrenString()
 	{
 		$str = '';
 		foreach($this->_children as $child)
@@ -102,9 +103,19 @@ abstract class AbstractBbcodeNode implements IBbcodeNode
 	
 	/**
 	 * (non-PHPdoc)
-	 * @see IBbcodeNode::toHtml()
+	 * @see IBbcodeNode::toString()
 	 */
-	public function toHtml()
+	public function toString()
+	{
+		return $this->childrenString();
+	}
+	
+	/**
+	 * Displays the text for html rendering that holds only this node's
+	 * children text.
+	 * @return string
+	 */
+	public function childrenHtml()
 	{
 		$str = '';
 		foreach($this->_children as $child)
@@ -112,6 +123,15 @@ abstract class AbstractBbcodeNode implements IBbcodeNode
 			$str .= $child->toHtml();
 		}
 		return $str;
+	}
+	
+	/**
+	 * (non-PHPdoc)
+	 * @see IBbcodeNode::toHtml()
+	 */
+	public function toHtml()
+	{
+		return $this->childrenHtml();
 	}
 	
 	/**

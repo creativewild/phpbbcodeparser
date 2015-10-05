@@ -1,7 +1,7 @@
 {
 	"name": "anastaszor/phpbbcodeparser",
 	"description": "A library to parse bbcode without regexes",
-	"version": "1.0.2",
+	"version": "1.0.3",
 	"type": "library",
 	"keywords": [
 		"php", "phpbb", "bbcode", "parser"

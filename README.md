@@ -170,7 +170,7 @@ class MyCustomBoldNode extends BoldBbcodeNode
 	{
 		if($this->isEmpty())
 			return '';
-		return '<span class="myboldclass">'.parent::toHtml().'</span>';
+		return '<span class="myboldclass">'.parent::childrenHtml().'</span>';
 	}
 
 }
