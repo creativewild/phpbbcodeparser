@@ -32,6 +32,7 @@ class PhpBbcodeParser implements IBbcodeParser
 		'right' => 'RightBbcodeNode',
 		's' => 'StrikeBbcodeNode',
 		'size' => 'SizeBbcodeNode',
+		'spoiler' => 'SpoilerBbcodeNode',
 		'table' => 'TableBbcodeNode',
 		'td' => 'TableCellBbcodeNode',
 		'tr' => 'TableRowBbcodeNode',
@@ -434,6 +435,30 @@ class PhpBbcodeParser implements IBbcodeParser
 			$this->parseContent();
 		}
 		// else treat as text
+		return $node;
+	}
+	
+	/**
+	 * Parses the text inside a new spoiler bbcode node.
+	 * 
+	 * @param SpoilerBbcodeNode $node
+	 * @return SpoilerBbcodeNode
+	 */
+	protected function parseSpoilerBbcodeNode(SpoilerBbcodeNode $node)
+	{
+		$first_rbracket_pos = strpos($this->_string, ']', $this->_pos - 1);
+		if($first_rbracket_pos !== false)
+		{
+			$equal_pos = strpos($this->_string, '=', $this->_pos - 1);
+			if($equal_pos !== false && $equal_pos < $first_rbracket_pos)
+			{
+				// form [spoiler={title}]{text}[/spoiler]
+				$title = substr($this->_string, $equal_pos + 1, $first_rbracket_pos - $equal_pos - 1);
+				$node->setTitle($title);
+			}
+			$this->_pos = $first_rbracket_pos + 1;
+			$this->parseContent();
+		}
 		return $node;
 	}
 	
