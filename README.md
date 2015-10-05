@@ -62,7 +62,8 @@ Here is the list:
 | Named Link			| [url={url}]{text}[/url]							|
 | Image 				| [img]{url}[/img]									|
 | Dimensionned Image 	| [img={width}x{height}]{url}[/img]					|
-| Spoiler 				| [spoiler={title}]{text}[/spoiler]					|
+| Spoiler 				| [spoiler]{text}[/spoiler]							|
+| Titled Spoiler 		| [spoiler={title}]{text}[/spoiler]					|
 | List					| [list]\[li]{text}[/li]...[/list]					|
 | Tables 				| [table]\[tr]\[td]{text}[/td]...[/tr]...[/table]	|
 | Youtube				| [youtube]{video id}[/youtube]						|
