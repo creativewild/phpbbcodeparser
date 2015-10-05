@@ -117,7 +117,7 @@ However, list and table data structures are well build by the parser, and will
 produce valid Html data structures.
 
 
-## Configuration and Customisation
+## Configuration
 
 The PhpBbcodeParser object may accept an array of tags which will be redirected
 on creation, and tags that may be forbidden to parse by the engine. The same 
@@ -149,3 +149,46 @@ tag with no attributes, using the `parseDefaultNode()` method.
 Forbidden nodes will stay as-is as text in the user input, without any formatting.
 In case the user chooses to use such tags, they will be in the html as well as
 the rest of the text, html-encoded.
+
+## Customisation
+
+phpbbcodeparser is a flexible engine that lets you change its behavior at any
+point. For example, if you want to change the html output of the tag bold, for
+example, because you have a special stylesheet that does this, you can:
+
+1. Create a new class that inherits the `BoldBbcodeNode` class.
+
+```php
+class MyCustomBoldNode extends BoldBbcodeNode
+{
+	
+	/**
+	 * @see BoldBbcodeNode::toHtml()
+	 * @return string
+	 */
+	public function toHtml()
+	{
+		if($this->isEmpty())
+			return '';
+		return '<span class="myboldclass">'.parent::toHtml().'</span>";
+	}
+
+}
+
+```
+
+Then you'll have to declare this class into the configuration, like this:
+
+```php
+
+$config = array(
+	'classes'=> array(
+		'b' => 'MyCustomBoldNode',
+	),
+);
+
+$parser = new PhpBbcodeParser($config);
+
+```
+
+This parser will now parse the text mapping all [b] tags to your custom class.

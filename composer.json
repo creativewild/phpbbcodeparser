@@ -1,5 +1,5 @@
 {
-	"name": "phpbbcodeparser",
+	"name": "anastaszor/phpbbcodeparser",
 	"description": "A library to parse bbcode without regexes",
 	"version": "1.0.2",
 	"type": "library",
