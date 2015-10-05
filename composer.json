@@ -8,7 +8,7 @@
 	],
 	"homepage": "https://github.com/Anastaszor/phpbbcodeparser",
 	"time": "2015-10-02",
-	"license": "MIT",
+	"license": "LGPL2.1+",
 	"authors": [
 		{
 			"name": "Anastaszor",
