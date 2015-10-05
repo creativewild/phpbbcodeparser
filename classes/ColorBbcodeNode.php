@@ -38,8 +38,8 @@ class ColorBbcodeNode extends AbstractBbcodeNode
 		if($this->isEmpty())
 			return '';
 		if($this->_color === null)
-			return parent::toString();
-		return '[color='.$this->_color.']'.parent::toString().'[/color]';
+			return parent::childrenString();
+		return '[color='.$this->_color.']'.parent::childrenString().'[/color]';
 	}
 	
 	/**
@@ -51,8 +51,8 @@ class ColorBbcodeNode extends AbstractBbcodeNode
 		if($this->isEmpty())
 			return '';
 		if($this->_color === null)
-			return parent::toHtml();
-		return '<span style="color:'.$this->e($this->_color).';">'.parent::toHtml().'</span>';
+			return parent::childrenHtml();
+		return '<span style="color:'.$this->e($this->_color).';">'.parent::childrenHtml().'</span>';
 	}
 	
 	/**

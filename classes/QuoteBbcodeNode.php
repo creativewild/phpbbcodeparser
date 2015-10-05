@@ -38,8 +38,8 @@ class QuoteBbcodeNode extends AbstractBbcodeNode
 		if($this->isEmpty())
 			return '';
 		if($this->_author === null)
-			return '[quote]'.parent::toString().'[/quote]';
-		return '[quote='.$this->_author.']'.parent::toString().'[/quote]';
+			return '[quote]'.parent::childrenString().'[/quote]';
+		return '[quote='.$this->_author.']'.parent::childrenString().'[/quote]';
 	}
 	
 	/**
@@ -51,8 +51,8 @@ class QuoteBbcodeNode extends AbstractBbcodeNode
 		if($this->isEmpty())
 			return '';
 		if($this->_author === null)
-			return '<blockquote>'.parent::toHtml().'</blockquote>';
-		return '<blockquote><cite>'.$this->e($this->_author).'</cite>'.parent::toHtml().'</blockquote>';
+			return '<blockquote>'.parent::childrenHtml().'</blockquote>';
+		return '<blockquote><cite>'.$this->e($this->_author).'</cite>'.parent::childrenHtml().'</blockquote>';
 	}
 	
 	/**

@@ -55,7 +55,7 @@ class TableRowBbcodeNode extends AbstractBbcodeNode
 	{
 		if($this->isEmpty())
 			return '';
-		return '[tr]'.parent::toString().'[/tr]';
+		return '[tr]'.parent::childrenString().'[/tr]';
 	}
 	
 	/**
@@ -66,7 +66,7 @@ class TableRowBbcodeNode extends AbstractBbcodeNode
 	{
 		if($this->isEmpty())
 			return '';
-		return '<tr>'.parent::toHtml().'</tr>';
+		return '<tr>'.parent::childrenHtml().'</tr>';
 	}
 	
 	/**

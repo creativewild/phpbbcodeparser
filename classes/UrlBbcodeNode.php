@@ -42,7 +42,7 @@ class UrlBbcodeNode extends AbstractBbcodeNode
 		}
 		else
 		{
-			return '[url='.$this->_target_url.']'.parent::toString().'[/url]';
+			return '[url='.$this->_target_url.']'.parent::childrenString().'[/url]';
 		}
 	}
 	
@@ -61,7 +61,7 @@ class UrlBbcodeNode extends AbstractBbcodeNode
 		}
 		else
 		{
-			return '<a href="'.$this->e($this->_target_url).'">'.parent::toHtml().'</a>';
+			return '<a href="'.$this->e($this->_target_url).'">'.parent::childrenHtml().'</a>';
 		}
 	}
 	

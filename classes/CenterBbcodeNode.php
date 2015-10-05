@@ -18,7 +18,7 @@ class CenterBbcodeNode extends AbstractBbcodeNode
 	{
 		if($this->isEmpty())
 			return '';
-		return '[center]'.parent::toString().'[/center]';
+		return '[center]'.parent::childrenString().'[/center]';
 	}
 	
 	/**
@@ -29,7 +29,7 @@ class CenterBbcodeNode extends AbstractBbcodeNode
 	{
 		if($this->isEmpty())
 			return '';
-		return '<div style="text-align:center;">'.parent::toHtml().'</div>';
+		return '<div style="text-align:center;">'.parent::childrenHtml().'</div>';
 	}
 	
 	/**

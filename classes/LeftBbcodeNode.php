@@ -18,7 +18,7 @@ class LeftBbcodeNode extends AbstractBbcodeNode
 	{
 		if($this->isEmpty())
 			return '';
-		return '[left]'.parent::toString().'[/left]';
+		return '[left]'.parent::childrenString().'[/left]';
 	}
 	
 	/**
@@ -29,7 +29,7 @@ class LeftBbcodeNode extends AbstractBbcodeNode
 	{
 		if($this->isEmpty())
 			return '';
-		return '<div style="text-align:left;">'.parent::toHtml().'</div>';
+		return '<div style="text-align:left;">'.parent::childrenHtml().'</div>';
 	}
 	
 	/**

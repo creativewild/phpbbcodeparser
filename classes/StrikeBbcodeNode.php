@@ -19,7 +19,7 @@ class StrikeBbcodeNode extends AbstractBbcodeNode
 	{
 		if($this->isEmpty())
 			return '';
-		return '[s]'.parent::toString().'[/s]';
+		return '[s]'.parent::childrenString().'[/s]';
 	}
 	
 	/**
@@ -30,7 +30,7 @@ class StrikeBbcodeNode extends AbstractBbcodeNode
 	{
 		if($this->isEmpty())
 			return '';
-		return '<del>'.parent::toString().'</del>';
+		return '<del>'.parent::childrenString().'</del>';
 	}
 	
 	/**

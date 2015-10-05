@@ -18,7 +18,7 @@ class UnderlineBbcodeNode extends AbstractBbcodeNode
 	{
 		if($this->isEmpty())
 			return '';
-		return '[u]'.parent::toString().'[/u]';
+		return '[u]'.parent::childrenString().'[/u]';
 	}
 	
 	/**
@@ -29,7 +29,7 @@ class UnderlineBbcodeNode extends AbstractBbcodeNode
 	{
 		if($this->isEmpty())
 			return '';
-		return '<ins>'.parent::toHtml().'</ins>';
+		return '<ins>'.parent::childrenHtml().'</ins>';
 	}
 	
 	/**

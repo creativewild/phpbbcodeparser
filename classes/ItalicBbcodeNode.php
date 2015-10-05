@@ -19,7 +19,7 @@ class ItalicBbcodeNode extends AbstractBbcodeNode
 	{
 		if($this->isEmpty())
 			return '';
-		return '[i]'.parent::toString().'[/i]';
+		return '[i]'.parent::childrenString().'[/i]';
 	}
 	
 	/**
@@ -30,7 +30,7 @@ class ItalicBbcodeNode extends AbstractBbcodeNode
 	{
 		if($this->isEmpty())
 			return '';
-		return '<em>'.parent::toHtml().'</em>';
+		return '<em>'.parent::childrenHtml().'</em>';
 	}
 	
 	/**

@@ -19,7 +19,7 @@ class CodeBbcodeNode extends AbstractBbcodeNode
 	{
 		if($this->isEmpty())
 			return '';
-		return '[code]'.parent::toString().'[/code]';
+		return '[code]'.parent::childrenString().'[/code]';
 	}
 	
 	/**
@@ -30,7 +30,7 @@ class CodeBbcodeNode extends AbstractBbcodeNode
 	{
 		if($this->isEmpty())
 			return '';
-		return '<pre>'.parent::toString().'</pre>';
+		return '<pre>'.parent::childrenString().'</pre>';
 	}
 	
 	/**

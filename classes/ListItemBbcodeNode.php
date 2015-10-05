@@ -19,7 +19,7 @@ class ListItemBbcodeNode extends AbstractBbcodeNode
 	{
 		if($this->isEmpty())
 			return '';
-		return '[li]'.parent::toString().'[/li]';
+		return '[li]'.parent::childrenString().'[/li]';
 	}
 	
 	/**
@@ -30,7 +30,7 @@ class ListItemBbcodeNode extends AbstractBbcodeNode
 	{
 		if($this->isEmpty())
 			return '';
-		return '<li>'.parent::toHtml().'</li>';
+		return '<li>'.parent::childrenHtml().'</li>';
 	}
 	
 	/**

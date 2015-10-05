@@ -54,7 +54,7 @@ class ListBbcodeNode extends AbstractBbcodeNode
 	{
 		if($this->isEmpty())
 			return '';
-		return '[list]'.parent::toString().'[/list]';
+		return '[list]'.parent::childrenString().'[/list]';
 	}
 	
 	/**
@@ -65,7 +65,7 @@ class ListBbcodeNode extends AbstractBbcodeNode
 	{
 		if($this->isEmpty())
 			return '';
-		return '<ul>'.parent::toHtml().'</ul>';
+		return '<ul>'.parent::childrenHtml().'</ul>';
 	}
 	
 	/**

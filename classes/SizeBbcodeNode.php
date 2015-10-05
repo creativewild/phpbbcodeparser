@@ -47,8 +47,8 @@ class SizeBbcodeNode extends AbstractBbcodeNode
 		if($this->isEmpty())
 			return '';
 		if($this->_size === null)
-			return parent::toString();
-		return '[size='.$this->_size.']'.parent::toString().'[/size]';
+			return parent::childrenString();
+		return '[size='.$this->_size.']'.parent::childrenString().'[/size]';
 	}
 	
 	/**
@@ -60,8 +60,8 @@ class SizeBbcodeNode extends AbstractBbcodeNode
 		if($this->isEmpty())
 			return '';
 		if($this->_size === null)
-			return parent::toHtml();
-		return '<span style="font-size:'.$this->e($this->_size).';">'.parent::toHtml().'</span>';
+			return parent::childrenHtml();
+		return '<span style="font-size:'.$this->e($this->_size).';">'.parent::childrenHtml().'</span>';
 	}
 	
 	/**

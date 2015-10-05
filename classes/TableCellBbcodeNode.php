@@ -19,7 +19,7 @@ class TableCellBbcodeNode extends AbstractBbcodeNode
 	{
 		if($this->isEmpty())
 			return '';
-		return '[td]'.parent::toString().'[/td]';
+		return '[td]'.parent::childrenString().'[/td]';
 	}
 	
 	/**
@@ -30,7 +30,7 @@ class TableCellBbcodeNode extends AbstractBbcodeNode
 	{
 		if($this->isEmpty())
 			return '';
-		return '<td>'.parent::toString().'</td>';
+		return '<td>'.parent::childrenString().'</td>';
 	}
 	
 	/**
