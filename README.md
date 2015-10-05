@@ -79,8 +79,8 @@ replaces the right tags at the right places.
 
 Here's how the engine should be used.
 
-1.  First, retrieve the user's bbcode text with some formular.
-2.  Use this piece of code:
+- First, retrieve the user's bbcode text with some formular.
+- Use this piece of code:
 ```php
 $text = "<place here your user's input>";
 $parser = new PhpBbcodeParser();
@@ -92,12 +92,12 @@ The `$safebbcode` variable will contain a string which is what the engine
 has understand from the inner bbcode. Warning, such string is well bbcode-encoded
 but has still to be considered as user-input, and is NOT html-safe, NOR sql safe.
 
-3.  You can use this string to be stored in some persistant storage, e.g. database.
+- You can use this string to be stored in some persistant storage, e.g. database.
 
 Then, to get the text back into an html page, do the following:
 
-1.  First, retrieve this content from your persistant storage.
-2.  Use this piece of code:
+- First, retrieve this content from your persistant storage.
+- Use this piece of code:
 ```php
 $text = "<place here what was stored>";
 $parser = new PhpBbcodeParser();
@@ -108,7 +108,7 @@ $safeHtml = $node->toHtml();
 The `$safeHtml` variable contains now the user's text in safe html encoded
 state. 
 
-3.  You can `echo` it directly into your web pages.
+- You can `echo` it directly into your web pages.
 
 ! WARNING : For the moment, the engine does not guarantee that the valid bbcode
 tree will input a valid html tree. Nested anchors and/or image tags are possible
@@ -156,7 +156,7 @@ phpbbcodeparser is a flexible engine that lets you change its behavior at any
 point. For example, if you want to change the html output of the tag bold, for
 example, because you have a special stylesheet that does this, you can:
 
-1. Create a new class that inherits the `BoldBbcodeNode` class.
+- Create a new class that inherits the `BoldBbcodeNode` class.
 
 ```php
 class MyCustomBoldNode extends BoldBbcodeNode
@@ -170,14 +170,14 @@ class MyCustomBoldNode extends BoldBbcodeNode
 	{
 		if($this->isEmpty())
 			return '';
-		return '<span class="myboldclass">'.parent::toHtml().'</span>";
+		return '<span class="myboldclass">'.parent::toHtml().'</span>';
 	}
 
 }
 
 ```
 
-Then you'll have to declare this class into the configuration, like this:
+- Then you'll have to declare this class into the configuration, like this:
 
 ```php
 
@@ -191,4 +191,4 @@ $parser = new PhpBbcodeParser($config);
 
 ```
 
-This parser will now parse the text mapping all [b] tags to your custom class.
+This parser will now parse the text mapping all `[b]` tags to your custom class.
